@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hencil Edits - Premium Luxury Photography and Visual Agency. Capturing Stories Beyond The Lens.">
+    <meta property="og:title" content="Hencil Edits | Luxury Photography">
+    <meta property="og:description" content="Award-winning photography portfolio for weddings, portraits, and commercial projects.">
+    <title>Hencil Edits | Luxury Photography</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <header id="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">Hencil <span>Edits</span></a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#hero">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#portfolio">Portfolio</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="nav-actions">
+                <button id="theme-toggle" aria-label="Toggle Theme"><i class="fas fa-moon"></i></button>
+                <div class="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content reveal">
+            <h1>Hencil Edits</h1>
+            <p class="tagline">Capturing Stories Beyond The Lens</p>
+            <div class="hero-buttons">
+                <a href="#portfolio" class="btn btn-primary">View Portfolio</a>
+                <a href="#booking" class="btn btn-outline">Book a Session</a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <a href="#about"><i class="fas fa-chevron-down"></i></a>
+        </div>
+    </section>
+
+    <section id="about" class="section">
+        <div class="container about-grid">
+            <div class="about-image reveal">
+                <img src="https://images.unsplash.com/photo-1554046920-90dc5823ca0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Hencil Professional Portrait">
+            </div>
+            <div class="about-text reveal">
+                <h2 class="section-title">The Artist Behind the Lens</h2>
+                <p>Welcome to a world where light meets emotion. With a cinematic approach and an editorial eye, Hencil Edits crafts visual narratives that stand the test of time. Every frame is meticulously composed to deliver an award-winning visual experience.</p>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3 class="counter" data-target="10">0</h3>
+                        <p>Years Experience</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 class="counter" data-target="450">0</h3>
+                        <p>Projects Completed</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 class="counter" data-target="320">0</h3>
+                        <p>Happy Clients</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 class="counter" data-target="15">0</h3>
+                        <p>Awards Won</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="section bg-surface">
+        <div class="container">
+            <h2 class="section-title text-center reveal">Premium Services</h2>
+            <div class="services-grid">
+                <div class="service-card reveal">
+                    <i class="fas fa-ring"></i>
+                    <h3>Wedding Photography</h3>
+                    <p>Cinematic coverage of your special day, preserving unforgettable memories.</p>
+                </div>
+                <div class="service-card reveal">
+                    <i class="fas fa-user-tie"></i>
+                    <h3>Portrait Photography</h3>
+                    <p>Editorial-style portraits that capture your true essence and personality.</p>
+                </div>
+                <div class="service-card reveal">
+                    <i class="fas fa-building"></i>
+                    <h3>Commercial Photography</h3>
+                    <p>High-end imagery designed to elevate your brand and marketing materials.</p>
+                </div>
+                <div class="service-card reveal">
+                    <i class="fas fa-video"></i>
+                    <h3>Videography</h3>
+                    <p>Stunning 4K cinematic films for events, weddings, and commercial use.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="portfolio" class="section">
+        <div class="container">
+            <h2 class="section-title text-center reveal">Selected Works</h2>
+            <div class="portfolio-filters reveal">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="weddings">Weddings</button>
+                <button class="filter-btn" data-filter="portraits">Portraits</button>
+                <button class="filter-btn" data-filter="commercial">Commercial</button>
+            </div>
+            <div class="portfolio-gallery reveal">
+                <div class="gallery-item weddings"><img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=600" alt="Wedding 1"></div>
+                <div class="gallery-item portraits"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600" alt="Portrait 1"></div>
+                <div class="gallery-item commercial"><img src="https://images.unsplash.com/photo-1600607686527-6fb886090705?w=600" alt="Commercial 1"></div>
+                <div class="gallery-item weddings"><img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600" alt="Wedding 2"></div>
+                <div class="gallery-item portraits"><img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=600" alt="Portrait 2"></div>
+                <div class="gallery-item commercial"><img src="https://images.unsplash.com/photo-1493238792000-8113da705763?w=600" alt="Commercial 2"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing" class="section bg-surface">
+        <div class="container">
+            <h2 class="section-title text-center reveal">Investment</h2>
+            <div class="pricing-grid">
+                <div class="price-card reveal">
+                    <h3>Essential</h3>
+                    <div class="price">ksh 1,500</div>
+                    <ul>
+                        <li>2-Hour Session</li>
+                        <li>Basic Color Grading</li>
+                        <li>Online Digital Gallery</li>
+                        <li>Standard Delivery</li>
+                    </ul>
+                    <a href="#booking" class="btn btn-outline">Select Plan</a>
+                </div>
+                <div class="price-card popular reveal">
+                    <div class="badge">Most Popular</div>
+                    <h3>Professional</h3>
+                    <div class="price">ksh 3,800</div>
+                    <ul>
+                        <li>5-Hour Session</li>
+                        <li>Advanced Retouching</li>
+                        <li>High-Res Digital Gallery</li>
+                        <li>5 Premium Prints</li>
+                    </ul>
+                    <a href="#booking" class="btn btn-primary">Select Plan</a>
+                </div>
+                <div class="price-card reveal">
+                    <h3>Premium</h3>
+                    <div class="price">ksh 13,200</div>
+                    <ul>
+                        <li>Full-Day Coverage</li>
+                        <li>Editorial Retouching</li>
+                        <li>Drone Footage Included</li>
+                        <li>Priority Next-Day Delivery</li>
+                    </ul>
+                    <a href="#booking" class="btn btn-outline">Select Plan</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="booking" class="section">
+        <div class="container booking-container reveal">
+            <h2 class="section-title text-center">Book a Session</h2>
+            <form id="booking-form" class="booking-form">
+                <input type="text" placeholder="Full Name" required>
+                <input type="email" placeholder="Email Address" required>
+                <input type="tel" placeholder="Phone Number">
+                <select required>
+                    <option value="">Select Service Type</option>
+                    <option value="wedding">Wedding</option>
+                    <option value="portrait">Portrait</option>
+                    <option value="commercial">Commercial</option>
+                </select>
+                <input type="date" required>
+                <textarea rows="5" placeholder="Tell us about your vision..." required></textarea>
+                <button type="submit" class="btn btn-primary">Send Inquiry</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <h2>Hencil <span>Edits</span></h2>
+                <p>Luxury photography for those who demand excellence.</p>
+            </div>
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <a href="#home">Home</a>
+                <a href="#portfolio">Portfolio</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div class="footer-social">
+                <h3>Follow Us</h3>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-pinterest-p"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Hencil Edits. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/1234567890" class="whatsapp-float" target="_blank" aria-label="Chat on WhatsApp"><i class="fab fa-whatsapp"></i></a>
+    <button id="back-to-top" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+
+    <div id="lightbox" class="lightbox">
+        <span class="close-lightbox">&times;</span>
+        <img class="lightbox-content" id="lightbox-img" alt="Enlarged Portfolio View">
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

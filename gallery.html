@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hencil Edits Gallery - Explore our award-winning portfolio of weddings, portraits, and commercial photography.">
+    <title>Portfolio Gallery | Hencil Edits</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <header id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">Hencil <span>Edits</span></a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html#hero">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="index.html#services">Services</a></li>
+                    <li><a href="gallery.html" style="color: var(--accent-gold);">Portfolio</a></li>
+                    <li><a href="pricing.html">Pricing</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="nav-actions">
+                <button id="theme-toggle" aria-label="Toggle Theme"><i class="fas fa-moon"></i></button>
+                <div class="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="page-header">
+        <div class="page-header-overlay"></div>
+        <div class="page-header-content reveal">
+            <h1>The Archives</h1>
+            <p class="tagline">A curated collection of our finest visual stories.</p>
+        </div>
+    </section>
+
+    <section class="section bg-surface">
+        <div class="container">
+            <div class="portfolio-filters reveal" style="margin-bottom: 4rem;">
+                <button class="filter-btn active" data-filter="all">All Works</button>
+                <button class="filter-btn" data-filter="weddings">Weddings</button>
+                <button class="filter-btn" data-filter="outdoor">outdoor</button>
+                <button class="filter-btn" data-filter="event">event</button>
+                <button class="filter-btn" data-filter="vintage">vintage</button>
+            </div>
+
+            <div class="gallery-grid reveal">
+                <div class="gallery-item weddings"><img src="img13.webp" alt="Wedding Moment"></div>
+                <div class="gallery-item weddings"><img src="img14.webp" alt="Wedding Couple"></div>
+                <div class="gallery-item weddings"><img src="img7.webp" alt="Wedding Details"></div>
+                
+                <div class="gallery-item outdoor"><img src="img4.webp" alt="outdoor"></div>
+                <div class="gallery-item outdoor"><img src="img5.webp" alt="outdoor"></div>
+                <div class="gallery-item outdoor"><img src="/" alt="outdoor"></div>
+
+                <div class="gallery-item event"><img src="img15.webp" alt="event"></div>
+                <div class="gallery-item event"><img src="img16.webp" alt="event"></div>
+                <div class="gallery-item event"><img src="img8.webp" alt="event"></div>
+
+                <div class="gallery-item vintage"><img src="img2.webp" alt="vintage Architecture"></div>
+                <div class="gallery-item vintage"><img src="img3.webp" alt="vintage"></div>
+                <div class="gallery-item vintage"><img src="img6.webp" alt="vintage"></div>
+            </div>
+
+            <div class="pagination reveal">
+                <button class="page-btn"><i class="fas fa-chevron-left"></i></button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-banner reveal">
+        <div class="container text-center">
+            <h2>Ready to tell your story?</h2>
+            <p>Let's create something timeless together.</p>
+            <a href="index.html#booking" class="btn btn-primary" style="margin-top: 1.5rem;">Book Your Session</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <h2>Hencil <span>Edits</span></h2>
+                <p>Luxury photography for those who demand excellence.</p>
+            </div>
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <a href="index.html">Home</a>
+                <a href="gallery.html">Portfolio</a>
+                <a href="pricing.html">Pricing</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="footer-social">
+                <h3>Follow Us</h3>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-pinterest-p"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Hencil Edits. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/759701803" class="whatsapp-float" target="_blank" aria-label="Chat on WhatsApp"><i class="fab fa-whatsapp"></i></a>
+    <button id="back-to-top" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+
+    <div id="lightbox" class="lightbox">
+        <span class="close-lightbox">&times;</span>
+        <img class="lightbox-content" id="lightbox-img" alt="Enlarged Portfolio View">
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

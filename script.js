@@ -5,9 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         loader.style.opacity = '0';
         setTimeout(() => loader.style.display = 'none', 500);
-    }, 1000); // 1s simulation
+    }, 1000);
 
-    // 2. Sticky Navbar & Back to Top
+    // 2. Navbar & Back to Top
     const navbar = document.getElementById('navbar');
     const backToTop = document.getElementById('back-to-top');
 
@@ -154,4 +154,88 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Thank you for your inquiry! We will contact you shortly.');
         form.reset();
     });
+
+
+
+
+
+
+
+
+
+
+
+
+
+// =========================================
+    // CONCIERGE CHATBOT SIMPLE LOGIC
+    // =========================================
+    const chatTrigger = document.getElementById('chat-trigger');
+    const chatWindow = document.getElementById('chat-window');
+    const chatClose = document.getElementById('chat-close');
+    const chatForm = document.getElementById('chat-input-form');
+    const chatInput = document.getElementById('chat-input');
+    const chatMessages = document.getElementById('chat-messages');
+
+    // Open/Close Functionality
+    chatTrigger.addEventListener('click', () => {
+        chatWindow.classList.toggle('open');
+        if (chatWindow.classList.contains('open')) {
+            chatInput.focus();
+        }
+    });
+
+    chatClose.addEventListener('click', () => {
+        chatWindow.classList.remove('open');
+    });
+
+    // Form submission & Automated Smart Responses
+    chatForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const userText = chatInput.value.trim();
+        if (!userText) return;
+
+        // Render User Message
+        appendMessage(userText, 'user-msg');
+        chatInput.value = '';
+
+        // Simulate Studio Response Delay
+        setTimeout(() => {
+            const botReply = generateStudioReply(userText);
+            appendMessage(botReply, 'system-msg');
+        }, 800);
+    });
+
+    function appendMessage(text, className) {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message', className);
+        messageDiv.innerHTML = `<p>${text}</p>`;
+        chatMessages.appendChild(messageDiv);
+        
+        // Auto Scroll to Bottom
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function generateStudioReply(input) {
+        const query = input.toLowerCase();
+        
+        if (query.includes('book') || query.includes('session') || query.includes('schedule') || query.includes('hire')) {
+            return "To secure a date, please fill out our structural brief on the <strong>Contact page</strong> or let us know your preferred month right here.";
+        }
+        if (query.includes('price') || query.includes('cost') || query.includes('investment') || query.includes('rate')) {
+            return "Our primary configurations range from $500 for the Essential set to $2,500 for comprehensive Full-Day productions. Detailed matrices can be parsed on our <strong>Pricing page</strong>.";
+        }
+        if (query.includes('portfolio') || query.includes('gallery') || query.includes('work') || query.includes('photos')) {
+            return "You can review our curated archives broken down by Wedding, Portrait, and Editorial sectors seamlessly on our dedicated <strong>Portfolio page</strong>.";
+        }
+        if (query.includes('location') || query.includes('where') || query.includes('studio') || query.includes('travel')) {
+            return "Our physical workspace is located at Machakos, Kenya. However, we accept international commissions and assignments globally.";
+        }
+        
+        // Default automated fall-back
+        return "Thank you for outlining yo?Your message has been routed directly to our creative desk. Alternatively, you may connect immediately via phone line at +254 759 701803.";
+    }
+    
+    
+    
 });

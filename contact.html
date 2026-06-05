@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Contact Hencil Edits - Initiate a private consultation for world-class editorial photography and visual direction.">
+    <title>Connect | Hencil Edits</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+        
+
+
+<body>
+
+    <!-- Loading Screen -->
+    <div id="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Navigation -->
+    <header id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">Hencil <span>Edits</span></a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html#hero">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="gallery.html">Portfolio</a></li>
+                    <li><a href="pricing.html">Pricing</a></li>
+                    <li><a href="contact.html" style="color: var(--accent-gold);">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="nav-actions">
+                <button id="theme-toggle" aria-label="Toggle Theme"><i class="fas fa-moon"></i></button>
+                <div class="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header contact-hero">
+        <div class="page-header-overlay"></div>
+        <div class="page-header-content reveal">
+            <h1>Commission Us</h1>
+            <p class="tagline">Initiate a collaboration or plan your session framework.</p>
+        </div>
+    </section>
+
+    <!-- Contact & Booking Core Workspace -->
+    <section class="section">
+        <div class="container contact-grid">
+            
+            <!-- Column 1: Studio Details -->
+            <div class="contact-info-panel reveal">
+                <span class="contact-sub">Direct Channels</span>
+                <h2>Let's construct <br>your narrative.</h2>
+                <p class="contact-lead-text">Have a concept or specific timeline parameters? Reach out directly via our operational branches or submit a project brief through the inquiry desk.</p>
+                
+                <div class="info-blocks">
+                    <div class="info-block">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h3>General Inquiries</h3>
+                            <p><a href="mailto:studio@henciledits.com">studio@henciledits.com</a></p>
+                        </div>
+                    </div>
+
+                    <div class="info-block">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h3>Creative Desk</h3>
+                            <p><a href="tel:+1234567890">+254 759 701 803</a></p>
+                        </div>
+                    </div>
+
+                    <div class="info-block">
+                        <i class="fas fa-location-dot"></i>
+                        
+                        <!--
+                        <div>
+                            <h3>The Atelier Space</h3>
+                            <p>742 Luxury District, Suite 10<br>New York, NY 10013</p>
+                        </div>
+                    </div>
+                    --->
+
+                    <div class="info-block">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <h3>Studio Hours</h3>
+                            <p>Monday — Friday: 10:00 — 18:00 EST<br>Saturday Sessions: By Commission Only</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column 2: Deep Project Brief Form -->
+            <div class="contact-form-wrapper reveal">
+                <form id="booking-form" class="studio-contact-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Your Name *</label>
+                            <input type="text" placeholder="e.g., Alex Kivuva" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address *</label>
+                            <input type="email" placeholder="name@example.com" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Phone Line</label>
+                            <input type="tel" placeholder="+254 700 000 0000">
+                        </div>
+                        <div class="form-group">
+                            <label>Assignment Type *</label>
+                            <select required>
+                                <option value="">Select Category</option>
+                                <option value="editorial">Editorial Portraiture</option>
+                                <option value="wedding">Cinematic Milestone / Wedding</option>
+                                <option value="commercial">Commercial Campaign</option>
+                                <option value="custom">Bespoke Fine Art Project</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Target Execution Date *</label>
+                            <input type="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Estimated Project Budget *</label>
+                            <select required>
+                                <option value="">Select Range</option>
+                                <option value="tier1">ksh500 — ksh1,000</option>
+                                <option value="tier2">ksh1,000 — ksh2,500</option>
+                                <option value="tier3">ksh2,500 — ksh5,000</option>
+                                <option value="tier4">ksh5,000+</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>The Vision & Parameters *</label>
+                        <textarea rows="6" placeholder="Describe the style, aesthetic goals, formatting preferences, or location requirements..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Transmit Brief</button>
+                </form>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Map Integration Space -->
+    <section class="map-section reveal">
+        <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1m4!2m3!1s0x89c2598f988156a9%3A0xd54628bdf9e61d7!2sSoHo%2C%20New%20York%2C%20NY!5m2!1s0x0!2s0x0" 
+            width="100%" 
+            height="450" 
+            style="border:0;" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Studio Location Map">
+        </iframe>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <h2>Hencil <span>Edits</span></h2>
+                <p>Luxury photography for those who demand excellence.</p>
+            </div>
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <a href="index.html">Home</a>
+                <a href="gallery.html">Portfolio</a>
+                <a href="pricing.html">Pricing</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="footer-social">
+                <h3>Follow Us</h3>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-pinterest-p"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Hencil Edits. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Floating Elements -->
+    <a href="https://wa.me/1234567890" class="whatsapp-float" target="_blank" aria-label="Chat on WhatsApp"><i class="fab fa-whatsapp"></i></a>
+    <button id="back-to-top" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+
+    <script src="script.js"></script>
+</body>
+</html>

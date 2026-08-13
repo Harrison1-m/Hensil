@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hensil Admin | Bookings</title>
+
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Montserrat, sans-serif;
+            background: #111;
+            color: #eee;
+            min-height: 100vh;
+        }
+
+        header {
+            padding: 20px 30px;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .logo span {
+            color: #c9a227;
+        }
+
+        .admin-label {
+            color: #aaa;
+            font-size: 13px;
+        }
+
+        main {
+            padding: 30px;
+            max-width: 1400px;
+            margin: auto;
+        }
+
+        h1 {
+            margin-bottom: 25px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat {
+            background: #1b1b1b;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .stat h2 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .stat p {
+            color: #999;
+            font-size: 13px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            background: #1b1b1b;
+            border: 1px solid #333;
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        th,
+        td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid #2d2d2d;
+        }
+
+        th {
+            color: #999;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        td {
+            font-size: 14px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .pending {
+            background: #554600;
+            color: #ffd84d;
+        }
+
+        .confirmed {
+            background: #123d27;
+            color: #52d98b;
+        }
+
+        .completed {
+            background: #173b55;
+            color: #64c5ff;
+        }
+
+        .cancelled {
+            background: #4a1717;
+            color: #ff7777;
+        }
+
+        select {
+            background: #111;
+            color: #eee;
+            border: 1px solid #444;
+            padding: 7px;
+            border-radius: 5px;
+        }
+
+        button {
+            border: 0;
+            background: #c9a227;
+            color: #111;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        button.delete {
+            background: #722020;
+            color: white;
+            margin-left: 5px;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #aaa;
+        }
+
+        @media (max-width: 700px) {
+            main {
+                padding: 20px 15px;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            header {
+                padding: 18px 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">
+        Hensil <span>Edits</span>
+    </div>
+
+    <div class="admin-label">
+        <i class="fas fa-shield-halved"></i>
+        Admin
+    </div>
+</header>
+
+<main>
+
+    <h1>Bookings</h1>
+
+    <section class="stats">
+
+        <div class="stat">
+            <h2 id="total-count">0</h2>
+            <p>Total Bookings</p>
+        </div>
+
+        <div class="stat">
+            <h2 id="pending-count">0</h2>
+            <p>Pending</p>
+        </div>
+
+        <div class="stat">
+            <h2 id="confirmed-count">0</h2>
+            <p>Confirmed</p>
+        </div>
+
+        <div class="stat">
+            <h2 id="completed-count">0</h2>
+            <p>Completed</p>
+        </div>
+
+    </section>
+
+    <section class="table-container">
+
+        <div id="loading" class="loading">
+            Loading bookings...
+        </div>
+
+        <table id="bookings-table" hidden>
+
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Client</th>
+                    <th>Contact</th>
+                    <th>Service</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody id="bookings-body"></tbody>
+
+        </table>
+
+        <div id="empty" class="empty" hidden>
+            No bookings found.
+        </div>
+
+    </section>
+
+</main>
+
+<script src="admin.js"></script>
+
+</body>
+</html>

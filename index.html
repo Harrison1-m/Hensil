@@ -179,19 +179,50 @@
         <div class="container booking-container reveal">
             <h2 class="section-title text-center">Book a Session</h2>
             <form id="booking-form" class="booking-form">
-                <input type="text" placeholder="Full Name" required>
-                <input type="email" placeholder="Email Address" required>
-                <input type="tel" placeholder="Phone Number">
-                <select required>
-                    <option value="">Select Service Type</option>
-                    <option value="wedding">Wedding</option>
-                    <option value="portrait">Portrait</option>
-                    <option value="commercial">Commercial</option>
-                </select>
-                <input type="date" required>
-                <textarea rows="5" placeholder="Tell us about your vision..." required></textarea>
-                <button type="submit" class="btn btn-primary">Send Inquiry</button>
-            </form>
+    <input
+        type="text"
+        name="name"
+        placeholder="Full Name"
+        required
+    >
+
+    <input
+        type="email"
+        name="email"
+        placeholder="Email Address"
+        required
+    >
+
+    <input
+        type="tel"
+        name="phone"
+        placeholder="Phone Number"
+    >
+
+    <select name="service" required>
+        <option value="">Select Service Type</option>
+        <option value="wedding">Wedding</option>
+        <option value="portrait">Portrait</option>
+        <option value="commercial">Commercial</option>
+    </select>
+
+    <input
+        type="date"
+        name="date"
+        required
+    >
+
+    <textarea
+        name="message"
+        rows="5"
+        placeholder="Tell us about your vision..."
+        required
+    ></textarea>
+
+    <button type="submit" class="btn btn-primary">
+        Send Inquiry
+    </button>
+</form>
         </div>
     </section>
 

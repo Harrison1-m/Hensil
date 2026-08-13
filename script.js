@@ -147,18 +147,54 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 9. Simple Form Validation
-    const form = document.getElementById('booking-form');
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        alert('Thank you for your inquiry! We will contact you shortly.');
+
+// 9. Booking Form
+const form = document.getElementById('booking-form');
+
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const submitButton = form.querySelector('button[type="submit"]');
+
+    const bookingData = {
+        name: form.elements.name.value.trim(),
+        email: form.elements.email.value.trim(),
+        phone: form.elements.phone.value.trim(),
+        service: form.elements.service.value,
+        date: form.elements.date.value,
+        message: form.elements.message.value.trim()
+    };
+
+    submitButton.disabled = true;
+    submitButton.textContent = 'Sending...';
+
+    try {
+        const response = await fetch('http://127.0.0.1:5000/api/contact', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(bookingData)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Failed to send inquiry.');
+        }
+
+        alert(data.message);
         form.reset();
-    });
 
+    } catch (error) {
+        console.error('Booking error:', error);
+        alert('Unable to send your inquiry. Please try again.');
 
-
-
-
+    } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Send Inquiry';
+    }
+});
 
 
 

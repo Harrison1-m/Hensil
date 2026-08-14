@@ -12,185 +12,334 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
 
-        body {
-            font-family: Montserrat, sans-serif;
-            background: #111;
-            color: #eee;
-            min-height: 100vh;
+    body {
+        font-family: Montserrat, sans-serif;
+        background: #111;
+        color: #eee;
+        min-height: 100vh;
+    }
+
+    header {
+        padding: 20px 30px;
+        border-bottom: 1px solid #333;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .logo {
+        font-size: 22px;
+        font-weight: 700;
+    }
+
+    .logo span {
+        color: #c9a227;
+    }
+
+    .admin-label {
+        color: #aaa;
+        font-size: 13px;
+    }
+
+    main {
+        padding: 30px;
+        max-width: 1400px;
+        margin: auto;
+    }
+
+    h1 {
+        margin-bottom: 25px;
+    }
+
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .stat {
+        background: #1b1b1b;
+        border: 1px solid #333;
+        border-radius: 10px;
+        padding: 20px;
+    }
+
+    .stat h2 {
+        font-size: 28px;
+        margin-bottom: 5px;
+    }
+
+    .stat p {
+        color: #999;
+        font-size: 13px;
+    }
+
+    .table-container {
+        background: #1b1b1b;
+        border: 1px solid #333;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        padding: 16px;
+        text-align: left;
+        border-bottom: 1px solid #2d2d2d;
+    }
+
+    th {
+        color: #999;
+        font-size: 12px;
+        text-transform: uppercase;
+    }
+
+    td {
+        font-size: 14px;
+    }
+
+    .status {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: capitalize;
+    }
+
+    .pending {
+        background: #554600;
+        color: #ffd84d;
+    }
+
+    .confirmed {
+        background: #123d27;
+        color: #52d98b;
+    }
+
+    .completed {
+        background: #173b55;
+        color: #64c5ff;
+    }
+
+    .cancelled {
+        background: #4a1717;
+        color: #ff7777;
+    }
+
+    select {
+        background: #111;
+        color: #eee;
+        border: 1px solid #444;
+        padding: 7px;
+        border-radius: 5px;
+    }
+
+    button {
+        border: 0;
+        background: #c9a227;
+        color: #111;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    button.delete {
+        background: #722020;
+        color: white;
+        margin-left: 5px;
+    }
+
+    .contact-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+        flex-wrap: wrap;
+    }
+
+    .contact-actions a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 8px 11px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 600;
+        color: white;
+    }
+
+    .call-btn {
+        background: #246b45;
+    }
+
+    .email-btn {
+        background: #315b91;
+    }
+
+    .whatsapp-btn {
+        background: #168c50;
+    }
+
+    .mobile-bookings {
+        display: none;
+    }
+
+    .booking-card {
+        background: #181818;
+        border: 1px solid #333;
+        border-radius: 12px;
+        padding: 17px;
+        margin-bottom: 12px;
+    }
+
+    .booking-card:last-child {
+        margin-bottom: 0;
+    }
+
+    .booking-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .booking-id {
+        color: #888;
+        font-size: 11px;
+        margin-bottom: 4px;
+    }
+
+    .booking-name {
+        font-size: 17px;
+        font-weight: 700;
+    }
+
+    .booking-details {
+        display: grid;
+        gap: 10px;
+        border-top: 1px solid #2d2d2d;
+        padding-top: 14px;
+    }
+
+    .detail {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        font-size: 13px;
+    }
+
+    .detail i {
+        width: 18px;
+        color: #c9a227;
+        margin-top: 2px;
+    }
+
+    .detail span {
+        color: #aaa;
+    }
+
+    .card-message {
+        margin-top: 14px;
+        padding: 12px;
+        background: #111;
+        border-radius: 7px;
+        color: #bbb;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    .card-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 15px;
+        padding-top: 14px;
+        border-top: 1px solid #2d2d2d;
+    }
+
+    .card-actions select {
+        flex: 1;
+    }
+
+    .empty {
+        text-align: center;
+        padding: 40px;
+        color: #777;
+    }
+
+    .loading {
+        text-align: center;
+        padding: 40px;
+        color: #aaa;
+    }
+
+    @media (max-width: 700px) {
+
+        main {
+            padding: 20px 12px;
         }
 
         header {
-            padding: 20px 30px;
-            border-bottom: 1px solid #333;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 22px;
-            font-weight: 700;
-        }
-
-        .logo span {
-            color: #c9a227;
-        }
-
-        .admin-label {
-            color: #aaa;
-            font-size: 13px;
-        }
-
-        main {
-            padding: 30px;
-            max-width: 1400px;
-            margin: auto;
+            padding: 18px 15px;
         }
 
         h1 {
-            margin-bottom: 25px;
+            font-size: 25px;
         }
 
         .stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
         .stat {
-            background: #1b1b1b;
-            border: 1px solid #333;
-            border-radius: 10px;
-            padding: 20px;
+            padding: 15px;
         }
 
         .stat h2 {
-            font-size: 28px;
-            margin-bottom: 5px;
+            font-size: 24px;
         }
 
         .stat p {
-            color: #999;
-            font-size: 13px;
+            font-size: 11px;
         }
 
         .table-container {
-            overflow-x: auto;
-            background: #1b1b1b;
-            border: 1px solid #333;
-            border-radius: 10px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 900px;
-        }
-
-        th,
-        td {
-            padding: 16px;
-            text-align: left;
-            border-bottom: 1px solid #2d2d2d;
-        }
-
-        th {
-            color: #999;
-            font-size: 12px;
-            text-transform: uppercase;
-        }
-
-        td {
-            font-size: 14px;
-        }
-
-        .status {
-            display: inline-block;
-            padding: 6px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: capitalize;
-        }
-
-        .pending {
-            background: #554600;
-            color: #ffd84d;
-        }
-
-        .confirmed {
-            background: #123d27;
-            color: #52d98b;
-        }
-
-        .completed {
-            background: #173b55;
-            color: #64c5ff;
-        }
-
-        .cancelled {
-            background: #4a1717;
-            color: #ff7777;
-        }
-
-        select {
-            background: #111;
-            color: #eee;
-            border: 1px solid #444;
-            padding: 7px;
-            border-radius: 5px;
-        }
-
-        button {
+            background: transparent;
             border: 0;
-            background: #c9a227;
-            color: #111;
-            padding: 8px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 600;
+            overflow: visible;
         }
 
-        button.delete {
-            background: #722020;
-            color: white;
-            margin-left: 5px;
+        #bookings-table {
+            display: none;
         }
 
-        .empty {
-            text-align: center;
-            padding: 40px;
-            color: #777;
+        .mobile-bookings {
+            display: block;
         }
 
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #aaa;
+        .contact-actions a {
+            flex: 1;
         }
-
-        @media (max-width: 700px) {
-            main {
-                padding: 20px 15px;
-            }
-
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            header {
-                padding: 18px 15px;
-            }
-        }
-    </style>
+    }
+</style>
 </head>
 
 <body>

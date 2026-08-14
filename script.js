@@ -187,9 +187,8 @@ form.addEventListener('submit', async (e) => {
         form.reset();
 
     } catch (error) {
-        console.error('Booking error:', error);
-        alert('Unable to send your inquiry. Please try again.');
-
+    console.error('Booking error:', error);
+    alert(error.message || 'Unable to send your inquiry. Please try again.');
     } finally {
         submitButton.disabled = false;
         submitButton.textContent = 'Send Inquiry';

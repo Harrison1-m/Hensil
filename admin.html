@@ -288,57 +288,145 @@
         padding: 40px;
         color: #aaa;
     }
+    
+    .mobile-bookings {
+    display: none;
+}
+
+.booking-card {
+    background: #1b1b1b;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 15px;
+}
+
+.booking-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.booking-id {
+    color: #888;
+    font-size: 11px;
+    margin-bottom: 5px;
+}
+
+.booking-name {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.booking-details {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.detail {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #ccc;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
+.detail i {
+    width: 18px;
+    color: #c9a227;
+}
+
+.card-message {
+    background: #111;
+    border-radius: 8px;
+    padding: 12px;
+    color: #aaa;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.contact-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 10px;
+}
+
+.contact-actions a {
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.call-btn {
+    background: #174d2d;
+    color: #64e89a;
+}
+
+.email-btn {
+    background: #193d55;
+    color: #70c8ff;
+}
+
+.whatsapp-btn {
+    background: #155c35;
+    color: #7bf0a8;
+}
+
+.card-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.card-actions select {
+    flex: 1;
+}
 
     @media (max-width: 700px) {
 
-        main {
-            padding: 20px 12px;
-        }
-
-        header {
-            padding: 18px 15px;
-        }
-
-        h1 {
-            font-size: 25px;
-        }
-
-        .stats {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .stat {
-            padding: 15px;
-        }
-
-        .stat h2 {
-            font-size: 24px;
-        }
-
-        .stat p {
-            font-size: 11px;
-        }
-
-        .table-container {
-            background: transparent;
-            border: 0;
-            overflow: visible;
-        }
-
-        #bookings-table {
-            display: none;
-        }
-
-        .mobile-bookings {
-            display: block;
-        }
-
-        .contact-actions a {
-            flex: 1;
-        }
+    main {
+        padding: 20px 15px;
     }
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+    }
+
+    header {
+        padding: 18px 15px;
+    }
+
+    .table-container {
+        background: transparent;
+        border: 0;
+        overflow: visible;
+    }
+
+    #bookings-table {
+        display: none !important;
+    }
+
+    .mobile-bookings {
+        display: block;
+    }
+
+    .booking-card {
+        width: 100%;
+    }
+}
 </style>
 </head>
 
@@ -391,21 +479,23 @@
 
         <table id="bookings-table" hidden>
 
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Client</th>
-                    <th>Contact</th>
-                    <th>Service</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Client</th>
+            <th>Contact</th>
+            <th>Service</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
 
-            <tbody id="bookings-body"></tbody>
+    <tbody id="bookings-body"></tbody>
 
-        </table>
+    </table>
+
+        <div id="mobile-bookings" class="mobile-bookings"></div>
 
         <div id="empty" class="empty" hidden>
             No bookings found.

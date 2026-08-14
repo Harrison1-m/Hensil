@@ -3,6 +3,7 @@ const API_URL = "https://hensil.onrender.com/api";
 const loading = document.getElementById("loading");
 const table = document.getElementById("bookings-table");
 const body = document.getElementById("bookings-body");
+const mobileBookings = document.getElementById("mobile-bookings");
 const empty = document.getElementById("empty");
 
 async function loadBookings() {
@@ -18,6 +19,7 @@ async function loadBookings() {
 
     } catch (error) {
         console.error("Failed to load bookings:", error);
+
         loading.textContent = "Unable to load bookings.";
     }
 }
@@ -30,31 +32,18 @@ function renderBookings(bookings) {
     updateStats(bookings);
 
     body.innerHTML = "";
-
-    const mobileBookings =
-        document.getElementById("mobile-bookings");
-
-    if (mobileBookings) {
-        mobileBookings.innerHTML = "";
-    }
+    mobileBookings.innerHTML = "";
 
     if (bookings.length === 0) {
+
         empty.hidden = false;
         table.hidden = true;
-
-        if (mobileBookings) {
-            mobileBookings.hidden = true;
-        }
 
         return;
     }
 
     empty.hidden = true;
     table.hidden = false;
-
-    if (mobileBookings) {
-        mobileBookings.hidden = false;
-    }
 
 
     bookings.forEach(booking => {
@@ -67,40 +56,14 @@ function renderBookings(bookings) {
             });
 
 
-        /*
-         * ============================
-         * PHONE / WHATSAPP
-         * ============================
-         */
-
-        const phone = String(booking.phone || "")
-            .replace(/[^\d+]/g, "");
-
-        let whatsappNumber = phone;
-
-        // Kenyan local number:
-        // 0712345678 -> 254712345678
-        if (whatsappNumber.startsWith("0")) {
-            whatsappNumber =
-                "254" + whatsappNumber.substring(1);
-        }
-
-        whatsappNumber =
-            whatsappNumber.replace("+", "");
-
-        const whatsappUrl =
-            `https://wa.me/${whatsappNumber}`;
-
-
-        /*
-         * ============================
-         * DESKTOP TABLE
-         * ============================
-         */
+        // =========================================
+        // DESKTOP TABLE
+        // =========================================
 
         const row = document.createElement("tr");
 
         row.innerHTML = `
+
             <td>
                 #${booking.id}
             </td>
@@ -121,45 +84,37 @@ function renderBookings(bookings) {
 
                 <div class="contact-actions">
 
-                    ${
-                        booking.phone
-                            ? `
-                                <a
-                                    class="call-btn"
-                                    href="tel:${escapeHtml(booking.phone)}"
-                                >
-                                    <i class="fas fa-phone"></i>
-                                    Call
-                                </a>
-                            `
-                            : ""
-                    }
+                    ${booking.phone ? `
+                        <a
+                            href="tel:${phoneForTel(booking.phone)}"
+                            class="call-btn"
+                        >
+                            <i class="fas fa-phone"></i>
+                            Call
+                        </a>
+                    ` : ""}
 
+                    ${booking.email ? `
+                        <a
+                            href="mailto:${encodeURIComponent(booking.email)}"
+                            class="email-btn"
+                        >
+                            <i class="fas fa-envelope"></i>
+                            Email
+                        </a>
+                    ` : ""}
 
-                    <a
-                        class="email-btn"
-                        href="mailto:${escapeHtml(booking.email)}"
-                    >
-                        <i class="fas fa-envelope"></i>
-                        Email
-                    </a>
-
-
-                    ${
-                        booking.phone
-                            ? `
-                                <a
-                                    class="whatsapp-btn"
-                                    href="${whatsappUrl}"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    <i class="fab fa-whatsapp"></i>
-                                    WhatsApp
-                                </a>
-                            `
-                            : ""
-                    }
+                    ${booking.phone ? `
+                        <a
+                            href="https://wa.me/${phoneForWhatsApp(booking.phone)}"
+                            target="_blank"
+                            rel="noopener"
+                            class="whatsapp-btn"
+                        >
+                            <i class="fab fa-whatsapp"></i>
+                            WhatsApp
+                        </a>
+                    ` : ""}
 
                 </div>
 
@@ -184,10 +139,7 @@ function renderBookings(bookings) {
             <td>
 
                 <select
-                    onchange="changeStatus(
-                        ${booking.id},
-                        this.value
-                    )"
+                    onchange="changeStatus(${booking.id}, this.value)"
                 >
 
                     <option
@@ -234,200 +186,199 @@ function renderBookings(bookings) {
         body.appendChild(row);
 
 
-        /*
-         * ============================
-         * MOBILE BOOKING CARD
-         * ============================
-         */
+        // =========================================
+        // MOBILE BOOKING CARD
+        // =========================================
 
-        if (mobileBookings) {
+        const card = document.createElement("article");
 
-            const card =
-                document.createElement("article");
+        card.className = "booking-card";
 
-            card.className = "booking-card";
+        card.innerHTML = `
 
-            card.innerHTML = `
+            <div class="booking-card-header">
 
-                <div class="booking-card-header">
+                <div>
 
-                    <div>
-
-                        <div class="booking-id">
-                            BOOKING #${booking.id}
-                        </div>
-
-                        <div class="booking-name">
-                            ${escapeHtml(booking.name)}
-                        </div>
-
+                    <div class="booking-id">
+                        BOOKING #${booking.id}
                     </div>
 
+                    <div class="booking-name">
+                        ${escapeHtml(booking.name)}
+                    </div>
 
-                    <span class="status ${escapeHtml(booking.status)}">
-                        ${escapeHtml(booking.status)}
+                </div>
+
+                <span class="status ${escapeHtml(booking.status)}">
+                    ${escapeHtml(booking.status)}
+                </span>
+
+            </div>
+
+
+            <div class="booking-details">
+
+                <div class="detail">
+
+                    <i class="fas fa-envelope"></i>
+
+                    <span>
+                        ${escapeHtml(booking.email)}
                     </span>
 
                 </div>
 
 
-                <div class="booking-details">
+                <div class="detail">
 
-                    <div class="detail">
-                        <i class="fas fa-briefcase"></i>
+                    <i class="fas fa-phone"></i>
 
-                        <span>
-                            ${escapeHtml(booking.service)}
-                        </span>
-                    </div>
-
-
-                    <div class="detail">
-                        <i class="fas fa-calendar"></i>
-
-                        <span>
-                            ${date}
-                        </span>
-                    </div>
-
-
-                    <div class="detail">
-                        <i class="fas fa-envelope"></i>
-
-                        <span>
-                            ${escapeHtml(booking.email)}
-                        </span>
-                    </div>
-
-
-                    ${
-                        booking.phone
-                            ? `
-                                <div class="detail">
-
-                                    <i class="fas fa-phone"></i>
-
-                                    <span>
-                                        ${escapeHtml(booking.phone)}
-                                    </span>
-
-                                </div>
-                            `
-                            : ""
-                    }
+                    <span>
+                        ${escapeHtml(booking.phone || "No phone number")}
+                    </span>
 
                 </div>
 
 
-                <div class="card-message">
+                <div class="detail">
 
-                    ${escapeHtml(booking.message)}
+                    <i class="fas fa-camera"></i>
+
+                    <span>
+                        ${escapeHtml(booking.service)}
+                    </span>
 
                 </div>
 
 
-                <div class="contact-actions">
+                <div class="detail">
+
+                    <i class="fas fa-calendar"></i>
+
+                    <span>
+                        ${date}
+                    </span>
+
+                </div>
+
+            </div>
 
 
-                    ${
-                        booking.phone
-                            ? `
-                                <a
-                                    class="call-btn"
-                                    href="tel:${escapeHtml(booking.phone)}"
-                                >
-                                    <i class="fas fa-phone"></i>
-                                    Call
-                                </a>
-                            `
-                            : ""
-                    }
+            ${
+                booking.message
+                    ? `
+                        <div class="card-message">
+                            <strong>Message</strong>
+                            <br>
+                            ${escapeHtml(booking.message)}
+                        </div>
+                    `
+                    : ""
+            }
 
 
-                    <a
-                        class="email-btn"
-                        href="mailto:${escapeHtml(booking.email)}"
+            <div class="contact-actions">
+
+                ${
+                    booking.phone
+                        ? `
+                            <a
+                                href="tel:${phoneForTel(booking.phone)}"
+                                class="call-btn"
+                            >
+                                <i class="fas fa-phone"></i>
+                                Call
+                            </a>
+                        `
+                        : ""
+                }
+
+
+                ${
+                    booking.email
+                        ? `
+                            <a
+                                href="mailto:${encodeURIComponent(booking.email)}"
+                                class="email-btn"
+                            >
+                                <i class="fas fa-envelope"></i>
+                                Email
+                            </a>
+                        `
+                        : ""
+                }
+
+
+                ${
+                    booking.phone
+                        ? `
+                            <a
+                                href="https://wa.me/${phoneForWhatsApp(booking.phone)}"
+                                target="_blank"
+                                rel="noopener"
+                                class="whatsapp-btn"
+                            >
+                                <i class="fab fa-whatsapp"></i>
+                                WhatsApp
+                            </a>
+                        `
+                        : ""
+                }
+
+            </div>
+
+
+            <div class="card-actions">
+
+                <select
+                    onchange="changeStatus(${booking.id}, this.value)"
+                >
+
+                    <option
+                        value="pending"
+                        ${booking.status === "pending" ? "selected" : ""}
                     >
-                        <i class="fas fa-envelope"></i>
-                        Email
-                    </a>
+                        Pending
+                    </option>
 
-
-                    ${
-                        booking.phone
-                            ? `
-                                <a
-                                    class="whatsapp-btn"
-                                    href="${whatsappUrl}"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    <i class="fab fa-whatsapp"></i>
-                                    WhatsApp
-                                </a>
-                            `
-                            : ""
-                    }
-
-                </div>
-
-
-                <div class="card-actions">
-
-                    <select
-                        onchange="changeStatus(
-                            ${booking.id},
-                            this.value
-                        )"
+                    <option
+                        value="confirmed"
+                        ${booking.status === "confirmed" ? "selected" : ""}
                     >
+                        Confirmed
+                    </option>
 
-                        <option
-                            value="pending"
-                            ${booking.status === "pending" ? "selected" : ""}
-                        >
-                            Pending
-                        </option>
-
-
-                        <option
-                            value="confirmed"
-                            ${booking.status === "confirmed" ? "selected" : ""}
-                        >
-                            Confirmed
-                        </option>
-
-
-                        <option
-                            value="completed"
-                            ${booking.status === "completed" ? "selected" : ""}
-                        >
-                            Completed
-                        </option>
-
-
-                        <option
-                            value="cancelled"
-                            ${booking.status === "cancelled" ? "selected" : ""}
-                        >
-                            Cancelled
-                        </option>
-
-                    </select>
-
-
-                    <button
-                        class="delete"
-                        onclick="deleteBooking(${booking.id})"
+                    <option
+                        value="completed"
+                        ${booking.status === "completed" ? "selected" : ""}
                     >
-                        <i class="fas fa-trash"></i>
-                    </button>
+                        Completed
+                    </option>
 
-                </div>
+                    <option
+                        value="cancelled"
+                        ${booking.status === "cancelled" ? "selected" : ""}
+                    >
+                        Cancelled
+                    </option>
 
-            `;
+                </select>
 
-            mobileBookings.appendChild(card);
-        }
+
+                <button
+                    class="delete"
+                    onclick="deleteBooking(${booking.id})"
+                    title="Delete booking"
+                >
+                    <i class="fas fa-trash"></i>
+                </button>
+
+            </div>
+
+        `;
+
+        mobileBookings.appendChild(card);
 
     });
 }
@@ -439,21 +390,19 @@ function updateStats(bookings) {
         bookings.length;
 
     document.getElementById("pending-count").textContent =
-        bookings.filter(
-            b => b.status === "pending"
-        ).length;
+        bookings.filter(b => b.status === "pending").length;
 
     document.getElementById("confirmed-count").textContent =
-        bookings.filter(
-            b => b.status === "confirmed"
-        ).length;
+        bookings.filter(b => b.status === "confirmed").length;
 
     document.getElementById("completed-count").textContent =
-        bookings.filter(
-            b => b.status === "completed"
-        ).length;
+        bookings.filter(b => b.status === "completed").length;
 }
 
+
+// =========================================
+// UPDATE STATUS
+// =========================================
 
 async function changeStatus(id, status) {
 
@@ -474,33 +423,29 @@ async function changeStatus(id, status) {
             }
         );
 
-
         const data = await response.json();
-
 
         if (!response.ok) {
             throw new Error(
-                data.message ||
-                "Unable to update booking."
+                data.message || "Unable to update booking."
             );
         }
-
 
         await loadBookings();
 
     } catch (error) {
 
-        console.error(
-            "Status update error:",
-            error
-        );
+        console.error(error);
 
-        alert(
-            "Unable to update booking."
-        );
+        alert("Unable to update booking.");
+
     }
 }
 
+
+// =========================================
+// DELETE BOOKING
+// =========================================
 
 async function deleteBooking(id) {
 
@@ -508,10 +453,7 @@ async function deleteBooking(id) {
         "Are you sure you want to delete this booking?"
     );
 
-
-    if (!confirmed) {
-        return;
-    }
+    if (!confirmed) return;
 
 
     try {
@@ -523,44 +465,72 @@ async function deleteBooking(id) {
             }
         );
 
-
         const data = await response.json();
-
 
         if (!response.ok) {
             throw new Error(
-                data.message ||
-                "Unable to delete booking."
+                data.message || "Unable to delete booking."
             );
         }
-
 
         await loadBookings();
 
     } catch (error) {
 
-        console.error(
-            "Delete error:",
-            error
-        );
+        console.error(error);
 
-        alert(
-            "Unable to delete booking."
-        );
+        alert("Unable to delete booking.");
+
     }
 }
 
 
+// =========================================
+// PHONE FORMATTING
+// =========================================
+
+function phoneForWhatsApp(phone) {
+
+    let number = String(phone || "")
+        .replace(/\D/g, "");
+
+    // Kenyan number: 07XXXXXXXX
+    if (number.startsWith("0")) {
+        number = "254" + number.substring(1);
+    }
+
+    // Kenyan number already supplied as +254...
+    if (number.startsWith("254")) {
+        return number;
+    }
+
+    return number;
+}
+
+
+function phoneForTel(phone) {
+
+    return String(phone || "")
+        .trim();
+}
+
+
+// =========================================
+// SECURITY
+// =========================================
+
 function escapeHtml(value) {
 
-    const div =
-        document.createElement("div");
+    const div = document.createElement("div");
 
-    div.textContent =
-        String(value ?? "");
+    div.textContent = String(value ?? "");
 
     return div.innerHTML;
 }
 
+
+// =========================================
+// START
+// =========================================
 
 loadBookings();

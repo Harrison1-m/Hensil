@@ -534,3 +534,53 @@ function escapeHtml(value) {
 // =========================================
 
 loadBookings();
+
+// =========================================
+// LIVE ADMIN NOTIFICATIONS
+// =========================================
+
+const eventSource = new EventSource(
+    `${API_URL}/admin/events`
+);
+
+eventSource.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+
+    if (data.type !== "new_booking") return;
+
+    const booking = data.booking;
+
+    // Refresh dashboard immediately
+    loadBookings();
+
+    // Browser notification
+    showBookingNotification(booking);
+};
+
+eventSource.onerror = (error) => {
+    console.error("Admin notification connection lost:", error);
+};
+
+function showBookingNotification(booking) {
+
+    const message =
+        `New booking from ${booking.name} — ${booking.service}`;
+
+    // Try browser notification
+    if ("Notification" in window) {
+
+        if (Notification.permission === "granted") {
+
+            new Notification("Hensil — New Booking", {
+                body: message
+            });
+
+        } else if (Notification.permission !== "denied") {
+
+            Notification.requestPermission();
+        }
+    }
+
+    // Also show an alert so we know the system works
+    alert(message);
+}

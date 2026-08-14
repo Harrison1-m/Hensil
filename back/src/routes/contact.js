@@ -1,5 +1,7 @@
 const express = require("express");
 const pool = require("../db");
+const { notifyAdmins } = require("../notifications");
+
 
 const router = express.Router();
 
@@ -39,6 +41,7 @@ router.post("/", async (req, res) => {
 
         console.log("New booking saved:");
         console.log(result.rows[0]);
+        notifyAdmins(result.rows[0]);
 
         res.status(201).json({
             success: true,

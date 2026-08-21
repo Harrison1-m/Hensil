@@ -105,58 +105,91 @@
             <!-- Column 2: Deep Project Brief Form -->
             <div class="contact-form-wrapper reveal">
                 <form id="booking-form" class="studio-contact-form">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Your Name *</label>
-                            <input type="text" placeholder="e.g., Alex Kivuva" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Email Address *</label>
-                            <input type="email" placeholder="name@example.com" required>
-                        </div>
-                    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="booking-name">Your Name *</label>
+            <input
+                type="text"
+                id="booking-name"
+                name="name"
+                placeholder="e.g., Alex Kivuva"
+                required
+            >
+        </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Phone Line</label>
-                            <input type="tel" placeholder="+254 700 000 0000">
-                        </div>
-                        <div class="form-group">
-                            <label>Assignment Type *</label>
-                            <select required>
-                                <option value="">Select Category</option>
-                                <option value="editorial">Editorial Portraiture</option>
-                                <option value="wedding">Cinematic Milestone / Wedding</option>
-                                <option value="commercial">Commercial Campaign</option>
-                                <option value="custom">Bespoke Fine Art Project</option>
-                            </select>
-                        </div>
-                    </div>
+        <div class="form-group">
+            <label for="booking-email">Email Address *</label>
+            <input
+                type="email"
+                id="booking-email"
+                name="email"
+                placeholder="name@example.com"
+                required
+            >
+        </div>
+    </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Target Execution Date *</label>
-                            <input type="date" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Estimated Project Budget *</label>
-                            <select required>
-                                <option value="">Select Range</option>
-                                <option value="tier1">ksh500 — ksh1,000</option>
-                                <option value="tier2">ksh1,000 — ksh2,500</option>
-                                <option value="tier3">ksh2,500 — ksh5,000</option>
-                                <option value="tier4">ksh5,000+</option>
-                            </select>
-                        </div>
-                    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="booking-phone">Phone Line</label>
+            <input
+                type="tel"
+                id="booking-phone"
+                name="phone"
+                placeholder="+254 700 000 000"
+            >
+        </div>
 
-                    <div class="form-group">
-                        <label>The Vision & Parameters *</label>
-                        <textarea rows="6" placeholder="Describe the style, aesthetic goals, formatting preferences, or location requirements..." required></textarea>
-                    </div>
+        <div class="form-group">
+            <label for="booking-service">Assignment Type *</label>
+            <select id="booking-service" name="service" required>
+                <option value="">Select Category</option>
+                <option value="portrait">Editorial Portraiture</option>
+                <option value="wedding">Cinematic Milestone / Wedding</option>
+                <option value="commercial">Commercial Campaign</option>
+                <option value="custom">Bespoke Fine Art Project</option>
+            </select>
+        </div>
+    </div>
 
-                    <button type="submit" class="btn btn-primary">Transmit Brief</button>
-                </form>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="booking-date">Target Execution Date *</label>
+            <input
+                type="date"
+                id="booking-date"
+                name="date"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="booking-budget">Estimated Project Budget</label>
+            <select id="booking-budget" name="budget">
+                <option value="">Select Range</option>
+                <option value="KSh 500 — KSh 1,000">KSh 500 — KSh 1,000</option>
+                <option value="KSh 1,000 — KSh 2,500">KSh 1,000 — KSh 2,500</option>
+                <option value="KSh 2,500 — KSh 5,000">KSh 2,500 — KSh 5,000</option>
+                <option value="KSh 5,000+">KSh 5,000+</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="booking-message">The Vision & Parameters *</label>
+        <textarea
+            id="booking-message"
+            name="message"
+            rows="6"
+            placeholder="Describe the style, aesthetic goals, formatting preferences, or location requirements..."
+            required
+        ></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Transmit Brief
+    </button>
+</form>
             </div>
 
         </div>

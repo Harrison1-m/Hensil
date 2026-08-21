@@ -1,5 +1,41 @@
 const API_URL = "https://hensil.onrender.com/api";
 
+// Admin token exists only for this page session.
+// It is never stored in localStorage or sent to GitHub.
+let ADMIN_TOKEN = null;
+
+function getAdminHeaders(extra = {}) {
+    return {
+        ...extra,
+        "Authorization": `Bearer ${ADMIN_TOKEN}`
+    };
+}
+
+async function authenticateAdmin() {
+    const token = prompt("Enter Hensil Admin Token:");
+
+    if (!token) {
+        throw new Error("Admin authentication required.");
+    }
+
+    ADMIN_TOKEN = token.trim();
+
+    const response = await fetch(`${API_URL}/bookings`, {
+        headers: getAdminHeaders()
+    });
+
+    if (response.status === 401) {
+        ADMIN_TOKEN = null;
+        throw new Error("Invalid admin token.");
+    }
+
+    if (!response.ok) {
+        throw new Error("Unable to authenticate with Hensil API.");
+    }
+
+    return response.json();
+}
+
 const loading = document.getElementById("loading");
 const table = document.getElementById("bookings-table");
 const body = document.getElementById("bookings-body");
@@ -8,19 +44,32 @@ const empty = document.getElementById("empty");
 
 async function loadBookings() {
     try {
-        const response = await fetch(`${API_URL}/bookings`);
-        const data = await response.json();
+        let data;
 
-        if (!response.ok) {
-            throw new Error(data.message || "Failed to load bookings.");
+        if (!ADMIN_TOKEN) {
+            data = await authenticateAdmin();
+        } else {
+            const response = await fetch(`${API_URL}/bookings`, {
+                headers: getAdminHeaders()
+            });
+
+            if (response.status === 401) {
+                ADMIN_TOKEN = null;
+                throw new Error("Admin authentication expired.");
+            }
+
+            data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || "Failed to load bookings.");
+            }
         }
 
         renderBookings(data.bookings);
 
     } catch (error) {
         console.error("Failed to load bookings:", error);
-
-        loading.textContent = "Unable to load bookings.";
+        loading.textContent = error.message || "Unable to load bookings.";
     }
 }
 
@@ -413,9 +462,9 @@ async function changeStatus(id, status) {
             {
                 method: "PATCH",
 
-                headers: {
+                headers: getAdminHeaders({
                     "Content-Type": "application/json"
-                },
+                }),
 
                 body: JSON.stringify({
                     status
@@ -461,7 +510,8 @@ async function deleteBooking(id) {
         const response = await fetch(
             `${API_URL}/bookings/${id}`,
             {
-                method: "DELETE"
+                method: "DELETE",
+                headers: getAdminHeaders()
             }
         );
 
@@ -536,51 +586,31 @@ function escapeHtml(value) {
 loadBookings();
 
 // =========================================
-// LIVE ADMIN NOTIFICATIONS
+// LIVE ADMIN DASHBOARD REFRESH
 // =========================================
 
-const eventSource = new EventSource(
-    `${API_URL}/admin/events`
-);
+// The booking API requires Authorization headers.
+// EventSource cannot send custom Authorization headers,
+// so the dashboard uses authenticated polling instead.
 
-eventSource.onmessage = (event) => {
-    const data = JSON.parse(event.data);
+const ADMIN_REFRESH_INTERVAL = 30000;
 
-    if (data.type !== "new_booking") return;
+setInterval(async () => {
+    if (!ADMIN_TOKEN) return;
 
-    const booking = data.booking;
-
-    // Refresh dashboard immediately
-    loadBookings();
-
-    // Browser notification
-    showBookingNotification(booking);
-};
-
-eventSource.onerror = (error) => {
-    console.error("Admin notification connection lost:", error);
-};
-
-function showBookingNotification(booking) {
-
-    const message =
-        `New booking from ${booking.name} — ${booking.service}`;
-
-    // Try browser notification
-    if ("Notification" in window) {
-
-        if (Notification.permission === "granted") {
-
-            new Notification("Hensil — New Booking", {
-                body: message
-            });
-
-        } else if (Notification.permission !== "denied") {
-
-            Notification.requestPermission();
-        }
+    try {
+        await loadBookings();
+    } catch (error) {
+        console.error("Dashboard refresh failed:", error);
     }
+}, ADMIN_REFRESH_INTERVAL);
 
-    // Also show an alert so we know the system works
-    alert(message);
+
+// =========================================
+// ADMIN LOGOUT
+// =========================================
+
+function adminLogout() {
+    ADMIN_TOKEN = null;
+    location.reload();
 }

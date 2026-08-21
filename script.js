@@ -151,50 +151,77 @@ document.addEventListener('DOMContentLoaded', () => {
 // 9. Booking Form
 const form = document.getElementById('booking-form');
 
-form.addEventListener('submit', async (e) => {
-    e.preventDefault();
+if (form) {
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-    const submitButton = form.querySelector('button[type="submit"]');
+        const submitButton = form.querySelector('button[type="submit"]');
 
-    const bookingData = {
-        name: form.elements.name.value.trim(),
-        email: form.elements.email.value.trim(),
-        phone: form.elements.phone.value.trim(),
-        service: form.elements.service.value,
-        date: form.elements.date.value,
-        message: form.elements.message.value.trim()
-    };
+        const name = form.elements.name?.value.trim();
+        const email = form.elements.email?.value.trim();
+        const phone = form.elements.phone?.value.trim();
+        const service = form.elements.service?.value;
+        const date = form.elements.date?.value;
+        const message = form.elements.message?.value.trim();
+        const budget = form.elements.budget?.value;
 
-    submitButton.disabled = true;
-    submitButton.textContent = 'Sending...';
+        const finalMessage = budget
+            ? `${message}\n\nEstimated Budget: ${budget}`
+            : message;
 
-    try {
-        const response = await fetch('https://hensil.onrender.com/api/contact', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(bookingData)
-        });
+        const bookingData = {
+            name,
+            email,
+            phone,
+            service,
+            date,
+            message: finalMessage
+        };
 
-        const data = await response.json();
+        submitButton.disabled = true;
+        submitButton.textContent = 'Sending...';
 
-        if (!response.ok) {
-            throw new Error(data.message || 'Failed to send inquiry.');
+        try {
+            const response = await fetch(
+                'https://hensil.onrender.com/api/contact',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(bookingData)
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message || 'Failed to send inquiry.'
+                );
+            }
+
+            alert(data.message);
+            form.reset();
+
+        } catch (error) {
+            console.error('Booking error:', error);
+
+            alert(
+                error.message ||
+                'Unable to send your inquiry. Please try again.'
+            );
+
+        } finally {
+            submitButton.disabled = false;
+
+            submitButton.textContent =
+                form.classList.contains('studio-contact-form')
+                    ? 'Transmit Brief'
+                    : 'Send Inquiry';
         }
-
-        alert(data.message);
-        form.reset();
-
-    } catch (error) {
-    console.error('Booking error:', error);
-    alert(error.message || 'Unable to send your inquiry. Please try again.');
-    } finally {
-        submitButton.disabled = false;
-        submitButton.textContent = 'Send Inquiry';
-    }
-});
-
+    });
+}
 
 
 

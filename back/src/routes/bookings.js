@@ -1,7 +1,11 @@
 const express = require("express");
 const pool = require("../db");
+const adminAuth = require("../middleware/adminAuth");
 
 const router = express.Router();
+
+// All booking management routes require admin authentication.
+router.use(adminAuth);
 
 // GET all bookings
 router.get("/", async (req, res) => {

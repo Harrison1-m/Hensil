@@ -9,6 +9,7 @@ const {
 } = require("./notifications");
 
 const app = express();
+const adminAuth = require("./middleware/adminAuth");
 const PORT = process.env.PORT || 5000;
 
 const contactRoutes = require("./routes/contact");
@@ -39,7 +40,7 @@ app.get("/api/health", (req, res) => {
 // ADMIN LIVE NOTIFICATIONS (SSE)
 // =========================================
 
-app.get("/api/admin/events", (req, res) => {
+app.get("/api/admin/events", adminAuth, (req, res) => {
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Cache-Control", "no-cache");
     res.setHeader("Connection", "keep-alive");

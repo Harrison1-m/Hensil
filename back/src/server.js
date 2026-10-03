@@ -58,6 +58,6 @@ app.get("/api/admin/events", adminAuth, (req, res) => {
 // START SERVER
 // =========================================
 
-app.listen(PORT, () => {
+app.listen(PORT, '127.0.0.1', () => {
     console.log(`Hensil backend running on port ${PORT}`);
 });

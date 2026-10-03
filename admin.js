@@ -1,4 +1,6 @@
-const API_URL = "https://hensil.onrender.com/api";
+const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? 'http://localhost:5000/api'
+    : '/api';
 
 // Admin token exists only for this page session.
 // It is never stored in localStorage or sent to GitHub.

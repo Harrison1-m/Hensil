@@ -182,8 +182,12 @@ if (form) {
         submitButton.textContent = 'Sending...';
 
         try {
+            const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+                ? 'http://localhost:5000/api'
+                : '/api';
+
             const response = await fetch(
-                'https://hensil.onrender.com/api/contact',
+                `${API_URL}/contact`,
                 {
                     method: 'POST',
                     headers: {

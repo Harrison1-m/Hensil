@@ -12,7 +12,7 @@ This document serves as the persistent source of truth for the Hensil creative p
 - **Stage 4 — Admin Real-Time Events / Polling:** COMPLETED
 - **Stage 5 — Automated Testing & Validation:** COMPLETED
 - **Stage 6 — Production Deployment & Runtime Validation:** COMPLETED (HTTPS via IP certificate 2026-10-11; domain pending)
-- **Stage 7 — Split Hosting: Frontend on GitHub Pages, Backend on VPS:** IN PROGRESS
+- **Stage 7 — Split Hosting: Frontend on GitHub Pages, Backend on VPS:** COMPLETED (manual in-browser click-through pending)
 
 ---
 
@@ -117,7 +117,7 @@ This document serves as the persistent source of truth for the Hensil creative p
 - **Verification Criteria:**
   - All production deployment steps (database, Nginx, PM2, API routing, localhost backend binding, health checks) successfully completed and verified. HTTPS/domain setup is pending domain procurement.
 
-### Stage 7 — Split Hosting: Frontend on GitHub Pages, Backend on VPS (IN PROGRESS)
+### Stage 7 — Split Hosting: Frontend on GitHub Pages, Backend on VPS (COMPLETED)
 - **Objective:** Serve the public frontend from GitHub Pages and keep the API, database and admin data on the VPS.
 - **Decision (2026-10-11, owner's request):**
   - Frontend: https://harrison1-m.github.io/Hensil/ (GitHub Pages, built from `main` branch root). Deploy = push to `main`.
@@ -138,6 +138,10 @@ This document serves as the persistent source of truth for the Hensil creative p
   - `npm test` passes (11 tests, including CORS tests for the Pages origin).
   - A booking submitted on the GitHub Pages site is stored in PostgreSQL; the admin page on Pages can list/update bookings.
   - http(s)://178.162.254.195/ redirects to GitHub Pages; /api keeps working.
+- **Verification results (2026-10-11):** npm test 11/11 passed. Pages build `7a7ec7e` serves the new API URL (JS syntax checked).
+  Live API from the Pages origin: CORS preflight 204 with allow-origin, booking POST 201 stored in PostgreSQL, admin list/PATCH/DELETE 200,
+  unauthenticated list 401; the test booking was deleted. VPS `/` and pages 302 to GitHub Pages, `/api/health` 200, ACME path still served on :80.
+  NOT verified: a real in-browser click-through on the Pages site (browser automation unavailable on the VPS).
 
 ---
 
@@ -150,9 +154,10 @@ This document serves as the persistent source of truth for the Hensil creative p
 - **2026-10-03:** Completed Stage 6 (Production Deployment & Runtime Validation) including Nginx reverse proxy configuration, frontend static asset deployment to `/var/www/hensil`, production `/api` routing update in `script.js` and `admin.js`, backend localhost-only binding (`127.0.0.1:5000`) in `back/src/server.js`, PM2 process management, and live health/frontend verification. Note: HTTPS and custom domain configuration remain pending.
 - **2026-10-11:** HTTPS enabled without a domain: Let's Encrypt IP-address certificate (shortlived profile, 6-day validity) via certbot 5.8.0 (/opt/certbot), nginx serves the site on :443 with HTTP->HTTPS redirect, adds `X-Forwarded-Proto` to `/api` and basic security headers. Renewal: systemd `certbot-renew.timer` every 6h. Custom domain remains pending; switching later only needs new server_name/cert paths.
 - **2026-10-11:** Stage 7 started: frontend moved to GitHub Pages, API called cross-origin at https://178.162.254.195/api; backend split into `app.js` + `server.js`; test suite repaired and CORS tests added (11/11 passing).
+- **2026-10-11:** Stage 7 completed: VPS root now redirects (302) to GitHub Pages; API verified cross-origin end-to-end.
 
 ---
 
 ## Next Action
 
-Finish Stage 7: verify a real booking from the GitHub Pages site end-to-end, then redirect the VPS root to GitHub Pages (nginx, needs sudo).
+Owner: submit one booking and open the admin page on https://harrison1-m.github.io/Hensil/ in a real browser. Candidates next: rate limiting on `/api/contact`, certificate-expiry alert, custom domain.

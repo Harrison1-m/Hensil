@@ -97,14 +97,14 @@ This document serves as the persistent source of truth for the Hensil creative p
   10. **Nginx Reverse Proxy Configuration:** COMPLETED (Configured in `/etc/nginx/sites-available/hensil`, proxying `/api` to `127.0.0.1:5000` and serving static frontend from `/var/www/hensil`).
   11. **Frontend / API Production Routing:** COMPLETED (`script.js` and `admin.js` configured to use `/api` in production).
   12. **Backend Localhost-Only Binding:** COMPLETED (`app.listen` bound strictly to `127.0.0.1:5000` for security).
-  13. **HTTPS / Domain Configuration:** PENDING (Awaiting domain acquisition and SSL certificate generation).
+  13. **HTTPS / Domain Configuration:** HTTPS COMPLETED 2026-10-11 via a Let's Encrypt IP-address certificate (https://178.162.254.195, HTTP redirects; 6-day cert auto-renewed by `certbot-renew.timer`; details in `~/ops/https/README.md`). Custom domain still PENDING (user decided not to buy one yet).
   14. **Final Live Application Test:** COMPLETED (Frontend and API endpoints verified responding with HTTP 200).
   15. **Final `npm test` Execution:** COMPLETED (All automated test suites passing).
   16. **Git Commit & GitHub Push:** PENDING (Final step remaining).
 - **Rollback & Safety Considerations:**
   - Keep database backups before applying migrations or updates.
   - Never expose database ports publicly; bind PostgreSQL and Node backend strictly to `localhost` (`127.0.0.1`).
-  - Secure `ADMIN_TOKEN` transmission using HTTPS once domain/SSL is configured.
+  - `ADMIN_TOKEN` is now transmitted over HTTPS (IP certificate, 2026-10-11).
 - **Files Involved:**
   - `back/schema.sql`
   - `back/.env.example`
@@ -125,6 +125,7 @@ This document serves as the persistent source of truth for the Hensil creative p
 - **2026-10-03:** Completed Stage 4 (Admin Real-Time Events / Polling) by verifying authenticated polling and SSE backend notification structures.
 - **2026-10-03:** Completed Stage 5 (Automated Testing & Validation) by implementing test runner configuration in `back/package.json`, creating comprehensive automated test suite (`back/test/api.test.js`), updating `README.md`, and successfully executing `npm test` (all 8 tests passed).
 - **2026-10-03:** Completed Stage 6 (Production Deployment & Runtime Validation) including Nginx reverse proxy configuration, frontend static asset deployment to `/var/www/hensil`, production `/api` routing update in `script.js` and `admin.js`, backend localhost-only binding (`127.0.0.1:5000`) in `back/src/server.js`, PM2 process management, and live health/frontend verification. Note: HTTPS and custom domain configuration remain pending.
+- **2026-10-11:** HTTPS enabled without a domain: Let's Encrypt IP-address certificate (shortlived profile, 6-day validity) via certbot 5.8.0 (/opt/certbot), nginx serves the site on :443 with HTTP->HTTPS redirect, adds `X-Forwarded-Proto` to `/api` and basic security headers. Renewal: systemd `certbot-renew.timer` every 6h. Custom domain remains pending; switching later only needs new server_name/cert paths.
 
 ---
 

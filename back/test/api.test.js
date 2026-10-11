@@ -57,7 +57,7 @@ db.query = async (text, params) => {
     return { rows: [] };
 };
 
-const app = require('../src/server');
+const app = require('../src/app');
 
 let server;
 let baseUrl;
@@ -237,4 +237,52 @@ test('DELETE /api/bookings/:id removes booking', async () => {
     assert.strictEqual(res.status, 200);
     assert.strictEqual(data.success, true);
     assert.strictEqual(mockBookings.length, 0);
+});
+
+// =========================================
+// CORS: frontend on GitHub Pages calls this API cross-origin
+// =========================================
+
+const PAGES_ORIGIN = 'https://harrison1-m.github.io';
+
+test('CORS preflight from GitHub Pages allows the admin Authorization header', async () => {
+    const res = await fetch(`${baseUrl}/api/bookings/1`, {
+        method: 'OPTIONS',
+        headers: {
+            'Origin': PAGES_ORIGIN,
+            'Access-Control-Request-Method': 'PATCH',
+            'Access-Control-Request-Headers': 'authorization,content-type'
+        }
+    });
+
+    assert.strictEqual(res.status, 204);
+    assert.strictEqual(res.headers.get('access-control-allow-origin'), PAGES_ORIGIN);
+    assert.match(res.headers.get('access-control-allow-methods'), /PATCH/);
+    assert.match(res.headers.get('access-control-allow-headers').toLowerCase(), /authorization/);
+});
+
+test('POST /api/contact from GitHub Pages returns the CORS allow-origin header', async () => {
+    const res = await fetch(`${baseUrl}/api/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Origin': PAGES_ORIGIN },
+        body: JSON.stringify({
+            name: 'Pages Visitor',
+            email: 'visitor@example.com',
+            phone: '0700000000',
+            service: 'Wedding',
+            date: '2026-12-12',
+            message: 'Booked from GitHub Pages'
+        })
+    });
+
+    assert.strictEqual(res.status, 201);
+    assert.strictEqual(res.headers.get('access-control-allow-origin'), PAGES_ORIGIN);
+});
+
+test('CORS does not allow unknown origins', async () => {
+    const res = await fetch(`${baseUrl}/api/health`, {
+        headers: { 'Origin': 'https://evil.example.com' }
+    });
+
+    assert.strictEqual(res.headers.get('access-control-allow-origin'), null);
 });

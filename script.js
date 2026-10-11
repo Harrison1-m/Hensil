@@ -182,9 +182,11 @@ if (form) {
         submitButton.textContent = 'Sending...';
 
         try {
+            // Frontend is hosted on GitHub Pages; the API runs on the VPS over HTTPS.
+            // When a domain is bought, change the address here and in admin.js.
             const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
                 ? 'http://localhost:5000/api'
-                : '/api';
+                : 'https://178.162.254.195/api';
 
             const response = await fetch(
                 `${API_URL}/contact`,

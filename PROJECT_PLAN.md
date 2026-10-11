@@ -11,7 +11,8 @@ This document serves as the persistent source of truth for the Hensil creative p
 - **Stage 3 — Frontend API Configuration & Flexibility:** COMPLETED
 - **Stage 4 — Admin Real-Time Events / Polling:** COMPLETED
 - **Stage 5 — Automated Testing & Validation:** COMPLETED
-- **Stage 6 — Production Deployment & Runtime Validation:** COMPLETED (Pending Domain & HTTPS)
+- **Stage 6 — Production Deployment & Runtime Validation:** COMPLETED (HTTPS via IP certificate 2026-10-11; domain pending)
+- **Stage 7 — Split Hosting: Frontend on GitHub Pages, Backend on VPS:** IN PROGRESS
 
 ---
 
@@ -116,6 +117,28 @@ This document serves as the persistent source of truth for the Hensil creative p
 - **Verification Criteria:**
   - All production deployment steps (database, Nginx, PM2, API routing, localhost backend binding, health checks) successfully completed and verified. HTTPS/domain setup is pending domain procurement.
 
+### Stage 7 — Split Hosting: Frontend on GitHub Pages, Backend on VPS (IN PROGRESS)
+- **Objective:** Serve the public frontend from GitHub Pages and keep the API, database and admin data on the VPS.
+- **Decision (2026-10-11, owner's request):**
+  - Frontend: https://harrison1-m.github.io/Hensil/ (GitHub Pages, built from `main` branch root). Deploy = push to `main`.
+  - Backend: https://178.162.254.195/api (nginx HTTPS -> pm2 `hensil` on 127.0.0.1:5000), PostgreSQL on the VPS.
+  - `script.js` / `admin.js` call `https://178.162.254.195/api` cross-origin (localhost still uses `http://localhost:5000/api`).
+    The API address lives in those two files; change both when a domain is bought.
+  - CORS allows `https://harrison1-m.github.io` (+ localhost:8001 for development). Preflight allows the admin `Authorization` header.
+  - The VPS stops serving its own copy of the frontend: `/` redirects (302) to GitHub Pages, so there is one canonical site.
+    302 rather than 301 so browsers don't cache it permanently (reversible if the site moves back or to a domain).
+- **Backend refactor:** the Express app moved to `back/src/app.js` (exported); `back/src/server.js` only listens. This also fixed
+  the test suite, which required `src/server` as an app and had been broken since the Stage 6 localhost-binding change.
+- **Known risks:**
+  - The API certificate is a 6-day IP certificate; if renewal fails, the GitHub Pages site cannot reach the API (browser TLS error).
+  - The repository is public, so GitHub Pages also serves `back/` source files (no secrets are committed; `.env` is git-ignored).
+  - pm2 runs the backend directly from this git working tree: checking out another branch changes what runs on the next restart.
+  - `/api/contact` is public with no rate limiting (unchanged by this stage; candidate follow-up).
+- **Verification Criteria:**
+  - `npm test` passes (11 tests, including CORS tests for the Pages origin).
+  - A booking submitted on the GitHub Pages site is stored in PostgreSQL; the admin page on Pages can list/update bookings.
+  - http(s)://178.162.254.195/ redirects to GitHub Pages; /api keeps working.
+
 ---
 
 ## Changelog
@@ -123,12 +146,13 @@ This document serves as the persistent source of truth for the Hensil creative p
 - **2026-10-03:** Initialized project structure, PostgreSQL database schema (`schema.sql`), Express backend (`server.js`, `db.js`, routes for contact and bookings), admin authentication middleware, and frontend client/admin scripts (`script.js`, `admin.js`). Created `PROJECT_PLAN.md`.
 - **2026-10-03:** Completed Stage 3 (Frontend API Configuration & Flexibility) by implementing dynamic host-based API URL resolution in `script.js` and `admin.js`.
 - **2026-10-03:** Completed Stage 4 (Admin Real-Time Events / Polling) by verifying authenticated polling and SSE backend notification structures.
-- **2026-10-03:** Completed Stage 5 (Automated Testing & Validation) by implementing test runner configuration in `back/package.json`, creating comprehensive automated test suite (`back/test/api.test.js`), updating `README.md`, and successfully executing `npm test` (all 8 tests passed).
+- **2026-10-03:** Completed Stage 5 (Automated Testing & Validation) by implementing test runner configuration in `back/package.json`, creating comprehensive automated test suite (`back/test/api.test.js`), updating `README.md`, and successfully executing `npm test` (all 8 tests passed). *(2026-10-11 note: the suite was later found broken after Stage 6 changed `server.js` to listen instead of exporting the app; fixed in Stage 7.)*
 - **2026-10-03:** Completed Stage 6 (Production Deployment & Runtime Validation) including Nginx reverse proxy configuration, frontend static asset deployment to `/var/www/hensil`, production `/api` routing update in `script.js` and `admin.js`, backend localhost-only binding (`127.0.0.1:5000`) in `back/src/server.js`, PM2 process management, and live health/frontend verification. Note: HTTPS and custom domain configuration remain pending.
 - **2026-10-11:** HTTPS enabled without a domain: Let's Encrypt IP-address certificate (shortlived profile, 6-day validity) via certbot 5.8.0 (/opt/certbot), nginx serves the site on :443 with HTTP->HTTPS redirect, adds `X-Forwarded-Proto` to `/api` and basic security headers. Renewal: systemd `certbot-renew.timer` every 6h. Custom domain remains pending; switching later only needs new server_name/cert paths.
+- **2026-10-11:** Stage 7 started: frontend moved to GitHub Pages, API called cross-origin at https://178.162.254.195/api; backend split into `app.js` + `server.js`; test suite repaired and CORS tests added (11/11 passing).
 
 ---
 
 ## Next Action
 
-**Git Review & Finalization:** Review all changes across the codebase and prepare for final git commit and push.
+Finish Stage 7: verify a real booking from the GitHub Pages site end-to-end, then redirect the VPS root to GitHub Pages (nginx, needs sudo).

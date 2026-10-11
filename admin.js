@@ -1,6 +1,8 @@
+// Frontend is hosted on GitHub Pages; the API runs on the VPS over HTTPS.
+// When a domain is bought, change the address here and in script.js.
 const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
     ? 'http://localhost:5000/api'
-    : '/api';
+    : 'https://178.162.254.195/api';
 
 // Admin token exists only for this page session.
 // It is never stored in localStorage or sent to GitHub.

@@ -64,8 +64,9 @@ router.get("/:id", async (req, res) => {
         .status.pending { background: #fff3cd; color: #856404; }
         .status.paid { background: #d4edda; color: #155724; }
         .footer { margin-top: 40px; text-align: center; font-size: 12px; color: #666; border-top: 1px solid #eee; padding-top: 20px; }
-        .print-btn { display: block; margin: 20px auto; padding: 10px 20px; background: #c9a227; color: #111; border: none; font-weight: bold; border-radius: 4px; cursor: pointer; }
-        @media print { .print-btn { display: none; } }
+        .print-btn { padding: 10px 20px; background: #c9a227; color: #111; border: none; font-weight: bold; border-radius: 4px; cursor: pointer; }
+        .download-btn { background: #315b91; color: white; }
+        @media print { .btn-container { display: none; } }
     </style>
 </head>
 <body>
@@ -112,7 +113,28 @@ router.get("/:id", async (req, res) => {
             <p><strong>Payment Instructions:</strong></p>
             ${isPaid ? '<p style="color: #155724; font-weight: bold;">Paid in full. Thank you for your business!</p>' : '<p>50% non-refundable retainer required to confirm booking date. Remaining balance due 7 days prior to execution.</p>'}
         </div>
-        <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+        <div class="btn-container" style="display: flex; gap: 10px; justify-content: center; margin-top: 30px;">
+            <button class="print-btn download-btn" onclick="downloadInvoiceFile()">Download Invoice</button>
+            <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+        </div>
+        <script>
+            function downloadInvoiceFile() {
+                const btns = document.querySelector('.btn-container');
+                btns.style.display = 'none';
+                const htmlContent = '<!DOCTYPE html>\\n' + document.documentElement.outerHTML;
+                btns.style.display = 'flex';
+                
+                const blob = new Blob([htmlContent], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'Hensil_Invoice_' + '${invoiceNo}' + '.html';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+        </script>
         <div class="footer">
             <p>Hencil Creative Photography & Media Production Studio &bull; info@hensilstudio.com</p>
         </div>

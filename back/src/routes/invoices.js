@@ -12,6 +12,15 @@ function escapeHtml(str) {
         .replace(/"/g, '&quot;');
 }
 
+function getInvoiceNumber(booking) {
+    const d = new Date(booking.created_at || Date.now());
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const seq = String(booking.id).padStart(3, '0');
+    return `HNS-${year}${month}${day}-${seq}`;
+}
+
 router.get("/:id", async (req, res) => {
     try {
         const result = await pool.query(
@@ -33,13 +42,14 @@ router.get("/:id", async (req, res) => {
         }
 
         const booking = result.rows[0];
+        const invoiceNo = getInvoiceNumber(booking);
         const isPaid = booking.payment_status === 'paid';
 
         const html = `<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Hensil Studio Invoice #${booking.id}</title>
+    <title>Hensil Studio Invoice ${invoiceNo}</title>
     <style>
         body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 40px; color: #111; background: #fff; }
         .invoice-box { max-width: 800px; margin: auto; padding: 30px; border: 1px solid #eee; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); }
@@ -63,7 +73,7 @@ router.get("/:id", async (req, res) => {
         <div class="header">
             <div class="logo">HENSIL STUDIO</div>
             <div>
-                <h2>INVOICE #${booking.id}</h2>
+                <h2>INVOICE ${invoiceNo}</h2>
                 <p>Date: ${new Date(booking.created_at || Date.now()).toLocaleDateString()}</p>
             </div>
         </div>

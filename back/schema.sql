@@ -10,6 +10,8 @@ CREATE TABLE IF NOT EXISTS bookings (
     booking_date DATE NOT NULL,
     message TEXT NOT NULL,
     status VARCHAR(50) NOT NULL DEFAULT 'pending',
+    payment_status VARCHAR(50) NOT NULL DEFAULT 'pending',
+    amount NUMERIC(10, 2) DEFAULT 0.00,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 

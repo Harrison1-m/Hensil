@@ -61,9 +61,9 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-// UPDATE booking status
+// UPDATE booking status or payment status
 router.patch("/:id", async (req, res) => {
-    const { status } = req.body;
+    const { status, payment_status } = req.body;
 
     const allowedStatuses = [
         "pending",
@@ -72,21 +72,46 @@ router.patch("/:id", async (req, res) => {
         "cancelled"
     ];
 
-    if (!allowedStatuses.includes(status)) {
+    const allowedPaymentStatuses = [
+        "pending",
+        "paid"
+    ];
+
+    if (status && !allowedStatuses.includes(status)) {
         return res.status(400).json({
             success: false,
             message: "Invalid booking status."
         });
     }
 
+    if (payment_status && !allowedPaymentStatuses.includes(payment_status)) {
+        return res.status(400).json({
+            success: false,
+            message: "Invalid payment status."
+        });
+    }
+
+    if (!status && !payment_status) {
+        return res.status(400).json({
+            success: false,
+            message: "No fields provided to update."
+        });
+    }
+
     try {
-        const result = await pool.query(
-            `UPDATE bookings
-             SET status = $1
-             WHERE id = $2
-             RETURNING *`,
-            [status, req.params.id]
-        );
+        let query, params;
+        if (status && payment_status) {
+            query = `UPDATE bookings SET status = $1, payment_status = $2 WHERE id = $3 RETURNING *`;
+            params = [status, payment_status, req.params.id];
+        } else if (status) {
+            query = `UPDATE bookings SET status = $1 WHERE id = $2 RETURNING *`;
+            params = [status, req.params.id];
+        } else {
+            query = `UPDATE bookings SET payment_status = $1 WHERE id = $2 RETURNING *`;
+            params = [payment_status, req.params.id];
+        }
+
+        const result = await pool.query(query, params);
 
         if (result.rows.length === 0) {
             return res.status(404).json({
@@ -97,7 +122,7 @@ router.patch("/:id", async (req, res) => {
 
         res.json({
             success: true,
-            message: "Booking status updated.",
+            message: "Booking updated successfully.",
             booking: result.rows[0]
         });
     } catch (error) {

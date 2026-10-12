@@ -2,8 +2,15 @@ const express = require("express");
 const pool = require("../db");
 const { notifyAdmins } = require("../notifications");
 
-
 const router = express.Router();
+
+function getServiceAmount(service) {
+    if (!service) return 3800.00;
+    const lower = service.toLowerCase();
+    if (lower.includes('mini') || lower.includes('portrait')) return 1500.00;
+    if (lower.includes('elite') || lower.includes('campaign')) return 13200.00;
+    return 3800.00;
+}
 
 router.post("/", async (req, res) => {
     const {
@@ -23,19 +30,22 @@ router.post("/", async (req, res) => {
         });
     }
 
+    const amount = getServiceAmount(service);
+
     try {
         const result = await pool.query(
             `INSERT INTO bookings
-                (name, email, phone, service, booking_date, message)
-             VALUES ($1, $2, $3, $4, $5, $6)
-             RETURNING id, name, email, phone, service, booking_date, message, status, created_at`,
+                (name, email, phone, service, booking_date, message, payment_status, amount)
+             VALUES ($1, $2, $3, $4, $5, $6, 'pending', $7)
+             RETURNING id, name, email, phone, service, booking_date, message, status, payment_status, amount, created_at`,
             [
                 name,
                 email,
                 phone || null,
                 service,
                 date,
-                message
+                message,
+                amount
             ]
         );
 

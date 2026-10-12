@@ -7,6 +7,7 @@ const API_URL = (window.location.hostname === 'localhost' || window.location.hos
 // Admin token exists only for this page session.
 // It is never stored in localStorage or sent to GitHub.
 let ADMIN_TOKEN = null;
+let allBookings = [];
 
 function getAdminHeaders(extra = {}) {
     return {
@@ -69,7 +70,8 @@ async function loadBookings() {
             }
         }
 
-        renderBookings(data.bookings);
+        allBookings = data.bookings;
+        renderBookings(allBookings);
 
     } catch (error) {
         console.error("Failed to load bookings:", error);
@@ -186,6 +188,34 @@ function renderBookings(bookings) {
                 <span class="status ${escapeHtml(booking.status)}">
                     ${escapeHtml(booking.status)}
                 </span>
+
+            </td>
+
+            <td>
+
+                <span class="status ${escapeHtml(booking.payment_status || 'pending')}">
+                    ${escapeHtml(booking.payment_status || 'pending')}
+                </span>
+
+                <div style="margin-top: 6px;">
+                    <select
+                        onchange="changePaymentStatus(${booking.id}, this.value)"
+                        style="font-size: 11px; padding: 4px;"
+                    >
+                        <option value="pending" ${booking.payment_status === 'pending' ? 'selected' : ''}>Pending</option>
+                        <option value="paid" ${booking.payment_status === 'paid' ? 'selected' : ''}>Paid</option>
+                    </select>
+                </div>
+
+                <div style="margin-top: 6px;">
+                    <button
+                        onclick="downloadAdminInvoice(${booking.id})"
+                        style="font-size: 11px; padding: 4px 8px; background: #315b91; color: white;"
+                        title="Download Invoice"
+                    >
+                        <i class="fas fa-file-invoice"></i> Invoice
+                    </button>
+                </div>
 
             </td>
 
@@ -429,6 +459,25 @@ function renderBookings(bookings) {
 
             </div>
 
+            <div class="card-actions" style="margin-top: 10px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                <span class="status ${escapeHtml(booking.payment_status || 'pending')}">
+                    ${escapeHtml(booking.payment_status || 'pending')}
+                </span>
+                <select
+                    onchange="changePaymentStatus(${booking.id}, this.value)"
+                    style="font-size: 11px; padding: 4px;"
+                >
+                    <option value="pending" ${booking.payment_status === 'pending' ? 'selected' : ''}>Pending</option>
+                    <option value="paid" ${booking.payment_status === 'paid' ? 'selected' : ''}>Paid</option>
+                </select>
+                <button
+                    onclick="downloadAdminInvoice(${booking.id})"
+                    style="font-size: 11px; padding: 4px 8px; background: #315b91; color: white;"
+                >
+                    <i class="fas fa-file-invoice"></i> Invoice
+                </button>
+            </div>
+
         `;
 
         mobileBookings.appendChild(card);
@@ -617,4 +666,134 @@ setInterval(async () => {
 function adminLogout() {
     ADMIN_TOKEN = null;
     location.reload();
+}
+
+
+// =========================================
+// INVOICE & PAYMENT MANAGEMENT
+// =========================================
+
+async function changePaymentStatus(id, payment_status) {
+    try {
+        const response = await fetch(
+            `${API_URL}/bookings/${id}`,
+            {
+                method: "PATCH",
+                headers: getAdminHeaders({
+                    "Content-Type": "application/json"
+                }),
+                body: JSON.stringify({
+                    payment_status
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || "Unable to update payment status.");
+        }
+
+        await loadBookings();
+
+    } catch (error) {
+        console.error(error);
+        alert("Unable to update payment status.");
+    }
+}
+
+function downloadAdminInvoice(id) {
+    const booking = allBookings.find(b => b.id === id);
+    if (!booking) {
+        alert("Booking not found.");
+        return;
+    }
+    downloadInvoice(booking);
+}
+
+function downloadInvoice(booking) {
+    const invoiceHtml = `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Hensil Studio Invoice #${booking.id}</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 40px; color: #111; background: #fff; }
+        .invoice-box { max-width: 800px; margin: auto; padding: 30px; border: 1px solid #eee; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #333; padding-bottom: 20px; }
+        .logo { font-size: 24px; font-weight: bold; letter-spacing: 2px; }
+        .invoice-details { margin-top: 20px; display: flex; justify-content: space-between; }
+        table { width: 100%; margin-top: 30px; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #f9f9f9; }
+        .total { text-align: right; margin-top: 20px; font-size: 18px; font-weight: bold; }
+        .status { display: inline-block; padding: 6px 12px; border-radius: 4px; font-weight: bold; font-size: 14px; text-transform: uppercase; }
+        .status.pending { background: #fff3cd; color: #856404; }
+        .status.paid { background: #d4edda; color: #155724; }
+        .footer { margin-top: 40px; text-align: center; font-size: 12px; color: #666; border-top: 1px solid #eee; padding-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="invoice-box">
+        <div class="header">
+            <div class="logo">HENSIL STUDIO</div>
+            <div>
+                <h2>INVOICE #${booking.id}</h2>
+                <p>Date: ${new Date(booking.created_at || Date.now()).toLocaleDateString()}</p>
+            </div>
+        </div>
+        <div class="invoice-details">
+            <div>
+                <strong>Billed To:</strong><br>
+                ${escapeHtml(booking.name)}<br>
+                Email: ${escapeHtml(booking.email)}<br>
+                Phone: ${escapeHtml(booking.phone || 'N/A')}
+            </div>
+            <div>
+                <strong>Payment Status:</strong><br>
+                <span class="status ${booking.payment_status || 'pending'}">${booking.payment_status || 'pending'}</span>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Service / Description</th>
+                    <th>Date</th>
+                    <th>Amount (Ksh)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>${escapeHtml(booking.service)}<br><small>${escapeHtml(booking.message || '')}</small></td>
+                    <td>${new Date(booking.booking_date).toLocaleDateString()}</td>
+                    <td>Ksh ${Number(booking.amount || 3800).toLocaleString()}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="total">
+            Total Due: Ksh ${Number(booking.amount || 3800).toLocaleString()}
+        </div>
+        <div style="margin-top: 30px; font-size: 14px;">
+            <p><strong>Payment Instructions:</strong></p>
+            <p>50% non-refundable retainer required to confirm booking date. Remaining balance due 7 days prior to execution.</p>
+        </div>
+        <div class="footer">
+            <p>Hencil Creative Photography & Media Production Studio &bull; info@hensilstudio.com</p>
+        </div>
+    </div>
+    <script>
+        window.print();
+    </script>
+</body>
+</html>`;
+
+    const blob = new Blob([invoiceHtml], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Hensil_Invoice_${booking.id}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 }

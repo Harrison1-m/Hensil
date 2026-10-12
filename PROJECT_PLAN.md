@@ -13,6 +13,7 @@ This document serves as the persistent source of truth for the Hensil creative p
 - **Stage 5 — Automated Testing & Validation:** COMPLETED
 - **Stage 6 — Production Deployment & Runtime Validation:** COMPLETED (HTTPS via IP certificate 2026-10-11; domain pending)
 - **Stage 7 — Split Hosting: Frontend on GitHub Pages, Backend on VPS:** COMPLETED (manual in-browser click-through pending)
+- **Stage 8 — Manual Invoicing & Payment Tracking:** COMPLETED
 
 ---
 
@@ -143,6 +144,25 @@ This document serves as the persistent source of truth for the Hensil creative p
   unauthenticated list 401; the test booking was deleted. VPS `/` and pages 302 to GitHub Pages, `/api/health` 200, ACME path still served on :80.
   NOT verified: a real in-browser click-through on the Pages site (browser automation unavailable on the VPS).
 
+### Stage 8 — Manual Invoicing & Payment Tracking (COMPLETED)
+- **Objective:** Implement manual invoicing and payment record keeping, including client-side pending invoice download upon booking submission and admin payment status management (marking paid / downloading paid invoices).
+- **Requirements & Implementation:**
+  - Updated database schema (`back/schema.sql`) and contact route (`back/src/routes/contact.js`) to include `payment_status` and estimated service `amount`.
+  - Updated admin bookings route (`back/src/routes/bookings.js`) to support updating `payment_status`.
+  - Added frontend client invoice generator and download prompt upon successful booking submission in `script.js`.
+  - Extended admin dashboard (`admin.html`, `admin.js`) to display payment status badges, status select dropdowns, and invoice download buttons.
+- **Files Involved:**
+  - `back/schema.sql`
+  - `back/src/routes/contact.js`
+  - `back/src/routes/bookings.js`
+  - `script.js`
+  - `admin.html`
+  - `admin.js`
+- **Verification Criteria:**
+  - Invoices successfully generate upon booking creation with correct pricing and pending status.
+  - Admin dashboard accurately tracks paid vs. pending balances and allows downloading paid/pending invoices.
+  - All automated tests (`npm test`) pass successfully (11/11).
+
 ---
 
 ## Changelog
@@ -155,6 +175,7 @@ This document serves as the persistent source of truth for the Hensil creative p
 - **2026-10-11:** HTTPS enabled without a domain: Let's Encrypt IP-address certificate (shortlived profile, 6-day validity) via certbot 5.8.0 (/opt/certbot), nginx serves the site on :443 with HTTP->HTTPS redirect, adds `X-Forwarded-Proto` to `/api` and basic security headers. Renewal: systemd `certbot-renew.timer` every 6h. Custom domain remains pending; switching later only needs new server_name/cert paths.
 - **2026-10-11:** Stage 7 started: frontend moved to GitHub Pages, API called cross-origin at https://178.162.254.195/api; backend split into `app.js` + `server.js`; test suite repaired and CORS tests added (11/11 passing).
 - **2026-10-11:** Stage 7 completed: VPS root now redirects (302) to GitHub Pages; API verified cross-origin end-to-end.
+- **2026-10-12:** Documented Stage 8 (Automated Invoicing & Payment Tracking) in `PROJECT_PLAN.md`.
 
 ---
 

@@ -210,6 +210,12 @@ if (form) {
             alert(data.message);
             form.reset();
 
+            if (data.booking) {
+                if (confirm("Would you like to download your Pending Invoice now?")) {
+                    downloadInvoice(data.booking);
+                }
+            }
+
         } catch (error) {
             console.error('Booking error:', error);
 
@@ -307,3 +313,95 @@ if (form) {
     
     
 });
+
+function downloadInvoice(booking) {
+    const invoiceHtml = `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Hensil Studio Invoice #${booking.id}</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 40px; color: #111; background: #fff; }
+        .invoice-box { max-width: 800px; margin: auto; padding: 30px; border: 1px solid #eee; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #333; padding-bottom: 20px; }
+        .logo { font-size: 24px; font-weight: bold; letter-spacing: 2px; }
+        .invoice-details { margin-top: 20px; display: flex; justify-content: space-between; }
+        table { width: 100%; margin-top: 30px; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #f9f9f9; }
+        .total { text-align: right; margin-top: 20px; font-size: 18px; font-weight: bold; }
+        .status { display: inline-block; padding: 6px 12px; border-radius: 4px; font-weight: bold; font-size: 14px; text-transform: uppercase; }
+        .status.pending { background: #fff3cd; color: #856404; }
+        .status.paid { background: #d4edda; color: #155724; }
+        .footer { margin-top: 40px; text-align: center; font-size: 12px; color: #666; border-top: 1px solid #eee; padding-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="invoice-box">
+        <div class="header">
+            <div class="logo">HENSIL STUDIO</div>
+            <div>
+                <h2>INVOICE #${booking.id}</h2>
+                <p>Date: ${new Date(booking.created_at || Date.now()).toLocaleDateString()}</p>
+            </div>
+        </div>
+        <div class="invoice-details">
+            <div>
+                <strong>Billed To:</strong><br>
+                ${escapeHtml(booking.name)}<br>
+                Email: ${escapeHtml(booking.email)}<br>
+                Phone: ${escapeHtml(booking.phone || 'N/A')}
+            </div>
+            <div>
+                <strong>Payment Status:</strong><br>
+                <span class="status ${booking.payment_status || 'pending'}">${booking.payment_status || 'pending'}</span>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Service / Description</th>
+                    <th>Date</th>
+                    <th>Amount (Ksh)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>${escapeHtml(booking.service)}<br><small>${escapeHtml(booking.message || '')}</small></td>
+                    <td>${new Date(booking.booking_date).toLocaleDateString()}</td>
+                    <td>Ksh ${Number(booking.amount || 3800).toLocaleString()}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="total">
+            Total Due: Ksh ${Number(booking.amount || 3800).toLocaleString()}
+        </div>
+        <div style="margin-top: 30px; font-size: 14px;">
+            <p><strong>Payment Instructions:</strong></p>
+            <p>50% non-refundable retainer required to confirm booking date. Remaining balance due 7 days prior to execution.</p>
+        </div>
+        <div class="footer">
+            <p>Hencil Creative Photography & Media Production Studio &bull; info@hensilstudio.com</p>
+        </div>
+    </div>
+    <script>
+        window.print();
+    </script>
+</body>
+</html>`;
+
+    const blob = new Blob([invoiceHtml], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Hensil_Invoice_${booking.id}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}

@@ -17,7 +17,7 @@ db.query = async (text, params) => {
     const cleanText = text.replace(/\s+/g, ' ').trim();
 
     if (cleanText.includes('INSERT INTO bookings')) {
-        const [name, email, phone, service, date, message] = params;
+        const [name, email, phone, service, date, message, amount] = params;
         const newBooking = {
             id: nextId++,
             name,
@@ -27,6 +27,8 @@ db.query = async (text, params) => {
             booking_date: date,
             message,
             status: 'pending',
+            payment_status: 'pending',
+            amount: amount || 3800.00,
             created_at: new Date().toISOString()
         };
         mockBookings.unshift(newBooking);
@@ -40,11 +42,28 @@ db.query = async (text, params) => {
         const booking = mockBookings.find(b => b.id == id);
         return { rows: booking ? [booking] : [] };
     }
-    if (cleanText.includes('UPDATE bookings SET status = $1')) {
-        const [status, id] = params;
-        const booking = mockBookings.find(b => b.id == id);
+    if (cleanText.includes('UPDATE bookings SET')) {
+        let booking, id;
+        if (cleanText.includes('status = $1, payment_status = $2')) {
+            const [status, payment_status, targetId] = params;
+            id = targetId;
+            booking = mockBookings.find(b => b.id == id);
+            if (booking) {
+                booking.status = status;
+                booking.payment_status = payment_status;
+            }
+        } else if (cleanText.includes('SET status = $1')) {
+            const [status, targetId] = params;
+            id = targetId;
+            booking = mockBookings.find(b => b.id == id);
+            if (booking) booking.status = status;
+        } else if (cleanText.includes('SET payment_status = $1')) {
+            const [payment_status, targetId] = params;
+            id = targetId;
+            booking = mockBookings.find(b => b.id == id);
+            if (booking) booking.payment_status = payment_status;
+        }
         if (!booking) return { rows: [] };
-        booking.status = status;
         return { rows: [booking] };
     }
     if (cleanText.includes('DELETE FROM bookings WHERE id = $1')) {

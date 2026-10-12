@@ -144,23 +144,26 @@ This document serves as the persistent source of truth for the Hensil creative p
   unauthenticated list 401; the test booking was deleted. VPS `/` and pages 302 to GitHub Pages, `/api/health` 200, ACME path still served on :80.
   NOT verified: a real in-browser click-through on the Pages site (browser automation unavailable on the VPS).
 
-### Stage 8 — Manual Invoicing & Payment Tracking (COMPLETED)
-- **Objective:** Implement manual invoicing and payment record keeping, including client-side pending invoice download upon booking submission and admin payment status management (marking paid / downloading paid invoices).
+### Stage 8 — Manual Invoicing & Payment Tracking (COMPLETED & REFINED)
+- **Objective:** Implement manual invoicing and payment record keeping, including client-side invoice viewing upon booking submission, server-rendered public invoice endpoints (`GET /api/invoices/:id`), admin payment status management, and shareable link generation for sending paid/pending invoices to clients.
 - **Requirements & Implementation:**
   - Updated database schema (`back/schema.sql`) and contact route (`back/src/routes/contact.js`) to include `payment_status` and estimated service `amount`.
+  - Created backend public invoice route (`back/src/routes/invoices.js`, mounted in `back/src/app.js`) to render standalone printable HTML invoices dynamically reflecting live `payment_status` (`pending` or `paid`).
   - Updated admin bookings route (`back/src/routes/bookings.js`) to support updating `payment_status`.
-  - Added frontend client invoice generator and download prompt upon successful booking submission in `script.js`.
-  - Extended admin dashboard (`admin.html`, `admin.js`) to display payment status badges, status select dropdowns, and invoice download buttons.
+  - Added frontend client prompt upon booking submission to view the pending invoice via the public API URL in `script.js`.
+  - Extended admin dashboard (`admin.html`, `admin.js`) to display payment status badges, live status select dropdowns, and an **"Invoice"** button that copies the shareable client invoice link to clipboard for instant dispatch via WhatsApp or Email.
 - **Files Involved:**
   - `back/schema.sql`
   - `back/src/routes/contact.js`
   - `back/src/routes/bookings.js`
+  - `back/src/routes/invoices.js`
+  - `back/src/app.js`
   - `script.js`
   - `admin.html`
   - `admin.js`
 - **Verification Criteria:**
-  - Invoices successfully generate upon booking creation with correct pricing and pending status.
-  - Admin dashboard accurately tracks paid vs. pending balances and allows downloading paid/pending invoices.
+  - Invoices successfully generate and render at `/api/invoices/:id` reflecting pending or paid status.
+  - Admin dashboard allows marking invoices paid and copying shareable links to send to clients.
   - All automated tests (`npm test`) pass successfully (11/11).
 
 ---
@@ -175,7 +178,7 @@ This document serves as the persistent source of truth for the Hensil creative p
 - **2026-10-11:** HTTPS enabled without a domain: Let's Encrypt IP-address certificate (shortlived profile, 6-day validity) via certbot 5.8.0 (/opt/certbot), nginx serves the site on :443 with HTTP->HTTPS redirect, adds `X-Forwarded-Proto` to `/api` and basic security headers. Renewal: systemd `certbot-renew.timer` every 6h. Custom domain remains pending; switching later only needs new server_name/cert paths.
 - **2026-10-11:** Stage 7 started: frontend moved to GitHub Pages, API called cross-origin at https://178.162.254.195/api; backend split into `app.js` + `server.js`; test suite repaired and CORS tests added (11/11 passing).
 - **2026-10-11:** Stage 7 completed: VPS root now redirects (302) to GitHub Pages; API verified cross-origin end-to-end.
-- **2026-10-12:** Documented Stage 8 (Automated Invoicing & Payment Tracking) in `PROJECT_PLAN.md`.
+- **2026-10-12:** Implemented and documented Stage 8 refined invoicing workflow (public invoice route `/api/invoices/:id`, admin link copying for client dispatch, live payment status binding).
 
 ---
 

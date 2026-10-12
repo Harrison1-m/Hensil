@@ -11,6 +11,7 @@ const {
 const adminAuth = require("./middleware/adminAuth");
 const contactRoutes = require("./routes/contact");
 const bookingsRoutes = require("./routes/bookings");
+const invoiceRoutes = require("./routes/invoices");
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use(express.json());
 
 app.use("/api/contact", contactRoutes);
 app.use("/api/bookings", bookingsRoutes);
+app.use("/api/invoices", invoiceRoutes);
 
 app.get("/api/health", (req, res) => {
     res.json({

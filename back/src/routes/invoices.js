@@ -114,26 +114,10 @@ router.get("/:id", async (req, res) => {
             ${isPaid ? '<p style="color: #155724; font-weight: bold;">Paid in full. Thank you for your business!</p>' : '<p>50% non-refundable retainer required to confirm booking date. Remaining balance due 7 days prior to execution.</p>'}
         </div>
         <div class="btn-container" style="display: flex; gap: 10px; justify-content: center; margin-top: 30px;">
-            <button class="print-btn download-btn" onclick="downloadInvoiceFile()">Download Invoice</button>
-            <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+            <button class="print-btn" onclick="window.print()">Print or Save as PDF</button>
         </div>
         <script>
-            function downloadInvoiceFile() {
-                const btns = document.querySelector('.btn-container');
-                btns.style.display = 'none';
-                const htmlContent = '<!DOCTYPE html>\\n' + document.documentElement.outerHTML;
-                btns.style.display = 'flex';
-                
-                const blob = new Blob([htmlContent], { type: 'text/html' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'Hensil_Invoice_' + '${invoiceNo}' + '.html';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            }
+            // The browser print dialog allows saving as PDF, which is the standard professional format.
         </script>
         <div class="footer">
             <p>Hencil Creative Photography & Media Production Studio &bull; info@hensilstudio.com</p>

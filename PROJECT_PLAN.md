@@ -144,27 +144,24 @@ This document serves as the persistent source of truth for the Hensil creative p
   unauthenticated list 401; the test booking was deleted. VPS `/` and pages 302 to GitHub Pages, `/api/health` 200, ACME path still served on :80.
   NOT verified: a real in-browser click-through on the Pages site (browser automation unavailable on the VPS).
 
-### Stage 8 — Manual Invoicing & Payment Tracking (COMPLETED & REFINED)
-- **Objective:** Implement manual invoicing and payment record keeping, including client-side invoice viewing upon booking submission, server-rendered public invoice endpoints (`GET /api/invoices/:id`), admin payment status management, and shareable link generation for sending paid/pending invoices to clients.
+### Stage 9 — Professional Favicon Integration (COMPLETED)
+- **Objective:** Create and integrate professional, high-resolution favicon assets from brand source images across all HTML pages of the Hensil platform.
 - **Requirements & Implementation:**
-  - Updated database schema (`back/schema.sql`) and contact route (`back/src/routes/contact.js`) to include `payment_status` and estimated service `amount`.
-  - Created backend public invoice route (`back/src/routes/invoices.js`, mounted in `back/src/app.js`) to render standalone printable HTML invoices dynamically reflecting live `payment_status` (`pending` or `paid`) and structured invoice numbers (`HNS-YYYYMMDD-SEQ` format based on booking creation date and ID).
-  - Updated admin bookings route (`back/src/routes/bookings.js`) to support updating `payment_status`.
-  - Added frontend client prompt upon booking submission to view the pending invoice via the public API URL in `script.js`.
-  - Extended admin dashboard (`admin.html`, `admin.js`) to display payment status badges, live status select dropdowns, and an **"Invoice"** button that copies the shareable client invoice link to clipboard for instant dispatch via WhatsApp or Email.
+  - Inspected candidate source images and selected `IMG-20261013-WA0001.jpg` (high-resolution 1463×1538 circular `N` monogram emblem).
+  - Generated optimized favicon assets in the project root:
+    - `favicon.ico` (multi-resolution 16×16, 32×32, 48×48)
+    - `favicon.png` (32×32 PNG icon)
+    - `apple-touch-icon.png` (180×180 Apple touch icon)
+  - Integrated standard and touch-icon metadata references into `<head>` across all 7 HTML pages (`index.html`, `about.html`, `admin.html`, `contact.html`, `gallery.html`, `pricing.html`, `services.html`).
 - **Files Involved:**
-  - `back/schema.sql`
-  - `back/src/routes/contact.js`
-  - `back/src/routes/bookings.js`
-  - `back/src/routes/invoices.js`
-  - `back/src/app.js`
-  - `script.js`
-  - `admin.html`
-  - `admin.js`
+  - `favicon.ico`
+  - `favicon.png`
+  - `apple-touch-icon.png`
+  - `index.html`, `about.html`, `admin.html`, `contact.html`, `gallery.html`, `pricing.html`, `services.html`
 - **Verification Criteria:**
-  - Invoices successfully generate and render at `/api/invoices/:id` reflecting pending or paid status.
-  - Admin dashboard allows marking invoices paid and copying shareable links to send to clients.
-  - All automated tests (`npm test`) pass successfully (11/11).
+  - All generated assets exist and have correct formats and sizes.
+  - HTML head references validate correctly.
+  - Automated backend tests pass successfully (11/11).
 
 ---
 

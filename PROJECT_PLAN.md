@@ -126,7 +126,8 @@ This document serves as the persistent source of truth for the Hensil creative p
   - `script.js` / `admin.js` call `https://178.162.254.195/api` cross-origin (localhost still uses `http://localhost:5000/api`).
     The API address lives in those two files; change both when a domain is bought.
   - CORS allows `https://harrison1-m.github.io` (+ localhost:8001 for development). Preflight allows the admin `Authorization` header.
-  - The VPS stops serving its own copy of the frontend: `/` redirects (302) to GitHub Pages, so there is one canonical site.
+  - The VPS serves the static frontend from `/var/www/hensil`; the GitHub Pages site remains available as a mirror.
+
     302 rather than 301 so browsers don't cache it permanently (reversible if the site moves back or to a domain).
 - **Backend refactor:** the Express app moved to `back/src/app.js` (exported); `back/src/server.js` only listens. This also fixed
   the test suite, which required `src/server` as an app and had been broken since the Stage 6 localhost-binding change.
@@ -138,7 +139,7 @@ This document serves as the persistent source of truth for the Hensil creative p
 - **Verification Criteria:**
   - `npm test` passes (11 tests, including CORS tests for the Pages origin).
   - A booking submitted on the GitHub Pages site is stored in PostgreSQL; the admin page on Pages can list/update bookings.
-  - http(s)://178.162.254.195/ redirects to GitHub Pages; /api keeps working.
+  - **Updated Redirection Policy:** http(s)://178.162.254.195/ now serves the default VPS web server landing page (Hostpinacle VPS), while /api continues to proxy to the backend.
 - **Verification results (2026-10-11):** npm test 11/11 passed. Pages build `7a7ec7e` serves the new API URL (JS syntax checked).
   Live API from the Pages origin: CORS preflight 204 with allow-origin, booking POST 201 stored in PostgreSQL, admin list/PATCH/DELETE 200,
   unauthenticated list 401; the test booking was deleted. VPS `/` and pages 302 to GitHub Pages, `/api/health` 200, ACME path still served on :80.
@@ -174,11 +175,22 @@ This document serves as the persistent source of truth for the Hensil creative p
 - **2026-10-03:** Completed Stage 6 (Production Deployment & Runtime Validation) including Nginx reverse proxy configuration, frontend static asset deployment to `/var/www/hensil`, production `/api` routing update in `script.js` and `admin.js`, backend localhost-only binding (`127.0.0.1:5000`) in `back/src/server.js`, PM2 process management, and live health/frontend verification. Note: HTTPS and custom domain configuration remain pending.
 - **2026-10-11:** HTTPS enabled without a domain: Let's Encrypt IP-address certificate (shortlived profile, 6-day validity) via certbot 5.8.0 (/opt/certbot), nginx serves the site on :443 with HTTP->HTTPS redirect, adds `X-Forwarded-Proto` to `/api` and basic security headers. Renewal: systemd `certbot-renew.timer` every 6h. Custom domain remains pending; switching later only needs new server_name/cert paths.
 - **2026-10-11:** Stage 7 started: frontend moved to GitHub Pages, API called cross-origin at https://178.162.254.195/api; backend split into `app.js` + `server.js`; test suite repaired and CORS tests added (11/11 passing).
-- **2026-10-11:** Stage 7 completed: VPS root now redirects (302) to GitHub Pages; API verified cross-origin end-to-end.
+- **2026-10-11:** Stage 7 completed (REVERTED): VPS root originally redirected (302) to GitHub Pages; this was disabled on 2026-10-17.
 - **2026-10-12:** Implemented structured invoice numbering scheme (`HNS-YYYYMMDD-SEQ`) and documented Stage 8 refined invoicing workflow in `PROJECT_PLAN.md`.
+- **2026-10-17:** Disabled redirection to GitHub Pages. The VPS now serves the static frontend directly from `/var/www/hensil` to comply with user preference for IP-based access. API continues to be proxied from `/api`.
 
 ---
 
 ## Next Action
 
 Owner: submit one booking and open the admin page on https://harrison1-m.github.io/Hensil/ in a real browser. Candidates next: rate limiting on `/api/contact`, certificate-expiry alert, custom domain.
+
+### Stage 10 — Paid Secure Image Portal & Wi-Fi Camera Sync (PENDING / PLANNED)
+- **Objective:** Build a secure, paid image storefront and automated live camera capture pipeline on the VPS.
+- **Planned Architecture & Features:**
+  - **Wi-Fi Camera Integration:** Configure automatic photo push from Wi-Fi camera (via FTP or HTTP POST) directly to VPS upload directory (`/home/harrison/uploads/`).
+  - **Custom Un-openable Image Format (`.himg`):** Obfuscate/encrypt raw captures so they cannot be opened by standard device gallery viewers locally.
+  - **In-Browser Encrypted Viewer:** Build client-side canvas rendering with dynamic anti-screenshot watermarking and disabled right-click/save features.
+  - **Stripe Payment Gateway:** Integrate web-based checkout for users to pay and unlock/download high-resolution un-watermarked assets.
+- **Status:** Pending implementation (planned feature).
+

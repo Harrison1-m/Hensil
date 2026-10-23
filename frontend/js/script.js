@@ -68,7 +68,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }, revealOptions);
 
     reveals.forEach(reveal => {
-        revealOnScroll.observe(reveal);
+        const rect = reveal.getBoundingClientRect();
+        if (rect.top < window.innerHeight) {
+            reveal.classList.add('active');
+        } else {
+            revealOnScroll.observe(reveal);
+        }
     });
 
     // 6. Animated Counters

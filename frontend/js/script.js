@@ -52,28 +52,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 5. Scroll Reveal Animations
+    // 5. Scroll Reveal Animations (Ensure 100% visibility immediately)
     const reveals = document.querySelectorAll('.reveal');
-    const revealOptions = {
-        threshold: 0.1,
-        rootMargin: "0px 0px -50px 0px"
-    };
-
-    const revealOnScroll = new IntersectionObserver(function(entries, observer) {
-        entries.forEach(entry => {
-            if (!entry.isIntersecting) return;
-            entry.target.classList.add('active');
-            observer.unobserve(entry.target);
-        });
-    }, revealOptions);
-
     reveals.forEach(reveal => {
-        const rect = reveal.getBoundingClientRect();
-        if (rect.top < window.innerHeight) {
-            reveal.classList.add('active');
-        } else {
-            revealOnScroll.observe(reveal);
-        }
+        reveal.classList.add('active');
     });
 
     // 6. Animated Counters

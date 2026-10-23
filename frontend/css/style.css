@@ -404,6 +404,10 @@ header.scrolled {
     color: var(--text-main);
     font-family: var(--font-body);
 }
+.booking-form select option, select option {
+    background-color: var(--surface-color);
+    color: var(--text-main);
+}
 .booking-form textarea, .booking-form button {
     grid-column: 1 / -1;
 }

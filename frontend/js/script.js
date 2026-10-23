@@ -211,7 +211,7 @@ if (form) {
             form.reset();
 
             if (data.booking) {
-                if (confirm("Would you like to view your Pending Invoice now?")) {
+                if (confirm("Booking submitted successfully! Would you like to view and download your official studio invoice now?")) {
                     window.open(`${API_URL}/invoices/${data.booking.id}`, '_blank');
                 }
             }

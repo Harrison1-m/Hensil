@@ -211,7 +211,7 @@ header.scrolled {
 /* --- Hero Section --- */
 #hero {
     height: 100vh;
-    background: url('img9.webp') center/cover no-repeat;
+    background: url('../assets/img9.webp') center/cover no-repeat;
     background-attachment: fixed;
     display: flex;
     align-items: center;
@@ -522,7 +522,7 @@ footer {
 /* --- Inner Page Header --- */
 .page-header {
     height: 50vh;
-    background: url('img17.webp') center/cover no-repeat;
+    background: url('../assets/img17.webp') center/cover no-repeat;
     background-attachment: fixed;
     position: relative;
     display: flex;
@@ -661,7 +661,7 @@ footer {
 
 /* --- Custom Background for About Hero --- */
 .about-hero {
-    background: url('img17.webp') center/cover no-repeat;
+    background: url('../assets/img17.webp') center/cover no-repeat;
     background-attachment: fixed;
 }
 
@@ -843,7 +843,7 @@ img {
 
 /* --- Custom Background for Services Hero --- */
 .services-hero {
-    background: url('img17.webp') center/cover no-repeat;
+    background: url('../assets/img17.webp') center/cover no-repeat;
     background-attachment: fixed;
 }
 
@@ -1024,7 +1024,7 @@ img {
 
 /* --- Custom Background for Pricing Hero --- */
 .pricing-hero {
-    background: url('img17.webp') center/cover no-repeat;
+    background: url('../assets/img17.webp') center/cover no-repeat;
     background-attachment: fixed;
 }
 
@@ -1170,7 +1170,7 @@ img {
 
 /* --- Custom Background for Contact Hero --- */
 .contact-hero {
-    background: url('img17.webp') center/cover no-repeat;
+    background: url('../assets/img17.webp') center/cover no-repeat;
     background-attachment: fixed;
 }
 

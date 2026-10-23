@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hencil Edits Studio - Exclusive Photography Campaign & Direct Booking. Book your luxury session and download your instant invoice.">
+    <title>Hencil Edits | Exclusive Booking & Campaign Landing</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="frontend/css/style.css">
+    <link rel="icon" type="image/x-icon" href="frontend/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="frontend/assets/favicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="frontend/assets/apple-touch-icon.png">
+</head>
+<body>
+
+    <div id="loader">
+        <div class="loader-container">
+            <img src="frontend/assets/logo-loader.png" alt="Hensil Logo" class="loader-logo">
+            <div class="spinner"></div>
+        </div>
+    </div>
+
+    <!-- Streamlined Landing Header -->
+    <header id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">Hencil <span>Edits</span></a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Main Site</a></li>
+                    <li><a href="portfolio.html">Portfolio</a></li>
+                    <li><a href="pricing.html">Pricing</a></li>
+                </ul>
+            </nav>
+            <div class="nav-actions">
+                <a href="#booking" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Book Now</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Landing Hero Section -->
+    <section id="hero" style="min-height: 80vh;">
+        <div class="hero-overlay"></div>
+        <div class="hero-content reveal">
+            <span style="color: var(--accent-gold); text-transform: uppercase; letter-spacing: 3px; font-size: 0.9rem; margin-bottom: 1rem; display: block;">Exclusive Campaign Portal</span>
+            <h1>Capturing Stories Beyond The Lens</h1>
+            <p class="tagline">Book your luxury photography session today and instantly receive your verified studio invoice with zero friction.</p>
+            <div class="hero-buttons">
+                <a href="#booking" class="btn btn-primary">Book Session & Get Invoice</a>
+                <a href="portfolio.html" class="btn btn-outline">Explore Gallery</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Campaign Highlights Section -->
+    <section class="section bg-surface">
+        <div class="container">
+            <h2 class="section-title text-center reveal">Why Choose Hencil Edits</h2>
+            <div class="services-grid">
+                <div class="service-card reveal">
+                    <i class="fas fa-camera-retro"></i>
+                    <h3>Cinematic Mastery</h3>
+                    <p>Award-winning editorial photography tailored for weddings, high-end portraits, and commercial campaigns.</p>
+                </div>
+                <div class="service-card reveal">
+                    <i class="fas fa-bolt"></i>
+                    <h3>Instant Invoicing</h3>
+                    <p>Seamless booking workflow with automated instant invoice generation for transparent tracking.</p>
+                </div>
+                <div class="service-card reveal">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Secured Delivery</h3>
+                    <p>High-resolution professional retouching delivered securely with dedicated client support.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dedicated Landing Booking & Invoice Section -->
+    <section id="booking" class="section">
+        <div class="container booking-container reveal">
+            <h2 class="section-title text-center">Secure Your Session</h2>
+            <p class="text-center" style="color: var(--text-muted); margin-bottom: 2rem; font-size: 0.95rem;">Fill out the form below to reserve your date and instantly generate & download your official studio invoice.</p>
+            <form id="booking-form" class="booking-form">
+                <input type="text" name="name" placeholder="Full Name" required>
+                <input type="email" name="email" placeholder="Email Address" required>
+                <input type="tel" name="phone" placeholder="Phone Number">
+                <select name="service" required>
+                    <option value="">Select Service Type</option>
+                    <option value="wedding">Wedding Coverage</option>
+                    <option value="portrait">Editorial Portraiture</option>
+                    <option value="commercial">Commercial Production</option>
+                </select>
+                <input type="date" name="date" required>
+                <textarea name="message" rows="5" placeholder="Tell us about your vision and desired date..." required></textarea>
+                <button type="submit" class="btn btn-primary">Book Session & Download Invoice</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <h2>Hencil <span>Edits</span></h2>
+                <p>Luxury photography campaign portal.</p>
+            </div>
+            <div class="footer-links">
+                <h3>Navigation</h3>
+                <a href="index.html">Home</a>
+                <a href="portfolio.html">Portfolio</a>
+                <a href="pricing.html">Pricing</a>
+                <a href="contact.html">Contact</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Hencil Edits. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="frontend/js/script.js"></script>
+</body>
+</html>

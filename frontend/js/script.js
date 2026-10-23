@@ -2,10 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. Remove Loader
     const loader = document.getElementById('loader');
-    setTimeout(() => {
+    if (loader) {
         loader.style.opacity = '0';
-        setTimeout(() => loader.style.display = 'none', 500);
-    }, 1000);
+        setTimeout(() => loader.style.display = 'none', 300);
+    }
 
     // 2. Navbar & Back to Top
     const navbar = document.getElementById('navbar');

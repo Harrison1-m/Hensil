@@ -32,7 +32,7 @@
         }
         .booking-landing-hero p {
             font-size: 1.15rem;
-            color: #aaa;
+            color: #e5e5e5 !important;
             max-width: 650px;
             margin: 0 auto;
             line-height: 1.6;
@@ -59,32 +59,45 @@
         }
         .booking-card-subtitle {
             text-align: center;
-            color: #999;
-            font-size: 0.95rem;
+            color: #cccccc !important;
+            font-size: 1rem;
             margin-bottom: 30px;
         }
         .studio-contact-form input,
         .studio-contact-form select,
         .studio-contact-form textarea {
             background: #1a1a1a !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
             border-radius: 8px !important;
             padding: 14px 16px !important;
-            color: #fff !important;
+            color: #ffffff !important;
+            font-size: 1rem !important;
             transition: all 0.3s ease !important;
+        }
+        .studio-contact-form input::placeholder,
+        .studio-contact-form textarea::placeholder {
+            color: #888888 !important;
+        }
+        .studio-contact-form select option {
+            background: #1a1a1a !important;
+            color: #ffffff !important;
+            padding: 10px !important;
         }
         .studio-contact-form input:focus,
         .studio-contact-form select:focus,
         .studio-contact-form textarea:focus {
             border-color: var(--accent-gold, #c5a059) !important;
-            box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.18) !important;
-            background: #1f1f1f !important;
+            box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.25) !important;
+            background: #222222 !important;
+            color: #ffffff !important;
         }
         .studio-contact-form label {
             font-weight: 600;
             letter-spacing: 1.2px;
-            color: #d0d0d0 !important;
+            color: #ffffff !important;
+            font-size: 0.85rem !important;
             margin-bottom: 6px;
+            display: block;
         }
         @media(max-width: 768px) {
             .booking-landing-hero h1 { font-size: 2.2rem; }

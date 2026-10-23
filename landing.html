@@ -42,13 +42,49 @@
             background: var(--bg-primary, #0a0a0a);
         }
         .booking-card {
-            max-width: 750px;
+            max-width: 780px;
             margin: 0 auto;
-            background: var(--bg-secondary, #141414);
-            padding: 45px;
-            border-radius: 12px;
-            border: 1px solid rgba(197, 160, 89, 0.3);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            background: #111111;
+            padding: 50px;
+            border-radius: 16px;
+            border: 1px solid rgba(197, 160, 89, 0.35);
+            box-shadow: 0 20px 45px rgba(0,0,0,0.6);
+        }
+        .booking-card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .booking-card-subtitle {
+            text-align: center;
+            color: #999;
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+        }
+        .studio-contact-form input,
+        .studio-contact-form select,
+        .studio-contact-form textarea {
+            background: #1a1a1a !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 8px !important;
+            padding: 14px 16px !important;
+            color: #fff !important;
+            transition: all 0.3s ease !important;
+        }
+        .studio-contact-form input:focus,
+        .studio-contact-form select:focus,
+        .studio-contact-form textarea:focus {
+            border-color: var(--accent-gold, #c5a059) !important;
+            box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.18) !important;
+            background: #1f1f1f !important;
+        }
+        .studio-contact-form label {
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            color: #d0d0d0 !important;
+            margin-bottom: 6px;
         }
         @media(max-width: 768px) {
             .booking-landing-hero h1 { font-size: 2.2rem; }
@@ -84,8 +120,9 @@
     <!-- Booking Hero / Header -->
     <section class="booking-landing-hero">
         <div class="container reveal">
-            <h1>Secure Your <span>Studio Commission</span></h1>
-            <p>Fill out your project specifications below to reserve your date and instantly generate your official studio invoice.</p>
+            <span style="display: inline-block; color: var(--accent-gold, #c5a059); text-transform: uppercase; letter-spacing: 2px; font-size: 0.85rem; font-weight: 600; margin-bottom: 10px;">Exclusive Commission Portal</span>
+            <h1>Secure Your <span>Studio Date Instantly</span></h1>
+            <p>Reserve your professional media production or photography session in under 60 seconds. Official studio invoice generated immediately upon submission.</p>
         </div>
     </section>
 
@@ -93,6 +130,16 @@
     <section class="booking-section" id="book">
         <div class="container">
             <div class="booking-card reveal">
+                <h2 class="booking-card-title">Reserve Your Session</h2>
+                <p class="booking-card-subtitle">Complete your commission specifications below</p>
+
+                <!-- Trust Badges Bar -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; padding-bottom: 25px; border-bottom: 1px solid rgba(197, 160, 89, 0.2); text-align: center; font-size: 0.85rem; color: #ccc;">
+                    <div><i class="fas fa-bolt" style="color: var(--accent-gold, #c5a059); margin-right: 6px;"></i> Instant Date Hold</div>
+                    <div><i class="fas fa-file-invoice-dollar" style="color: var(--accent-gold, #c5a059); margin-right: 6px;"></i> Instant PDF Invoice</div>
+                    <div><i class="fas fa-shield-alt" style="color: var(--accent-gold, #c5a059); margin-right: 6px;"></i> Guaranteed Crew</div>
+                </div>
+
                 <form id="booking-form" class="studio-contact-form">
                     <div class="form-row">
                         <div class="form-group">
@@ -162,8 +209,8 @@
                         ></textarea>
                     </div>
 
-                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 20px; padding: 15px; font-size: 1.05rem;">
-                        Submit Booking & Generate Invoice
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 20px; padding: 16px; font-size: 1.1rem; letter-spacing: 0.5px;">
+                        Secure Booking & Generate Instant Invoice
                     </button>
                 </form>
             </div>

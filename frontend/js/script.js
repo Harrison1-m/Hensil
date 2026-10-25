@@ -164,6 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
 
             const submitButton = form.querySelector('button[type="submit"]');
+            const originalButtonText = submitButton ? submitButton.textContent : 'Send Inquiry';
 
             const name = form.elements.name?.value.trim();
             const email = form.elements.email?.value.trim();
@@ -236,11 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } finally {
                 if (submitButton) {
                     submitButton.disabled = false;
-
-                    submitButton.textContent =
-                        form.classList.contains('studio-contact-form')
-                            ? 'Transmit Brief'
-                            : 'Send Inquiry';
+                    submitButton.textContent = originalButtonText;
                 }
             }
         });

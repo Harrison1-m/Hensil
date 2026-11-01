@@ -185,12 +185,15 @@ This document serves as the persistent source of truth for the Hensil creative p
 
 Owner: submit one booking and open the admin page on https://harrison1-m.github.io/Hensil/ in a real browser. Candidates next: rate limiting on `/api/contact`, certificate-expiry alert, custom domain.
 
-### Stage 10 — Paid Secure Image Portal & Wi-Fi Camera Sync (PENDING / PLANNED)
-- **Objective:** Build a secure, paid image storefront and automated live camera capture pipeline on the VPS.
-- **Planned Architecture & Features:**
-  - **Wi-Fi Camera Integration:** Configure automatic photo push from Wi-Fi camera (via FTP or HTTP POST) directly to VPS upload directory (`/home/harrison/uploads/`).
-  - **Custom Un-openable Image Format (`.himg`):** Obfuscate/encrypt raw captures so they cannot be opened by standard device gallery viewers locally.
-  - **In-Browser Encrypted Viewer:** Build client-side canvas rendering with dynamic anti-screenshot watermarking and disabled right-click/save features.
-  - **Stripe Payment Gateway:** Integrate web-based checkout for users to pay and unlock/download high-resolution un-watermarked assets.
-- **Status:** Pending implementation (planned feature).
+### Stage 10 — Paid Secure Media & Video Portal with M-Pesa (PLANNED / READY FOR IMPLEMENTATION)
+- **Objective:** Build a secure, paid media storefront and admin upload dashboard supporting street photography and events with direct M-Pesa STK Push, tamper-proof device licensing, video teasers, drag-to-peek watermarking, and cursor-based infinite scroll.
+- **Detailed Architecture & Features:**
+  - **UUIDs & Latest-First Cursor Pagination:** Non-guessable UUID primary keys (`media_assets`, `transactions`) and timestamp-based cursor infinite scrolling (`ORDER BY created_at DESC`) showing latest uploads first.
+  - **Admin Media Upload Dashboard:** Admin interface supporting direct photo and video uploads with a **Default-Locked** toggle (`is_locked`, defaults to `true`) allowing admins to set items as paid (requires M-Pesa) or free/unlocked.
+  - **Direct Safaricom Daraja API Integration (M-Pesa STK Push):** Server-to-server STK Push with real-time backend callback webhooks and frontend polling status checks.
+  - **Drag-to-Peek Floating Watermark:** Center-positioned Hensil logo watermark that allows users to drag/peek at underlying image detail but springs back to center on release, deterring casual scraping.
+  - **Video Teaser Pipeline:** Automated background FFmpeg processing generating 7–10 second compressed preview loops, swapping to full video upon payment.
+  - **Device-Locked Licensing & Local Caching:** Cryptographically signed HMAC tokens stored in browser `IndexedDB` alongside downloaded high-res assets, enabling offline/returning access on the same device without database accounts.
+  - **SEO for Unlocked Media vs. Protected Locked Media:** Unlocked free media includes Open Graph tags and search engine indexing; locked media serves watermarked previews with `noindex, nofollow` HTTP headers.
+- **Status:** Architecture finalized and documented; ready for execution.
 

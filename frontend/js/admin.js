@@ -716,3 +716,98 @@ function downloadAdminInvoice(id) {
         prompt("Copy client invoice link to send:", invoiceUrl);
     });
 }
+
+// =========================================
+// ADMIN MEDIA LIBRARY MANAGEMENT
+// =========================================
+
+async function loadAdminMedia() {
+    try {
+        const mediaTableBody = document.getElementById("media-table-body");
+        mediaTableBody.innerHTML = `<tr><td colspan="7" class="loading">Loading media assets...</td></tr>`;
+
+        const response = await fetch(`${API_URL}/media`);
+        const data = await response.json();
+
+        if (!response.ok) throw new Error("Failed to load media assets.");
+
+        const assets = data.data;
+        mediaTableBody.innerHTML = "";
+
+        if (assets.length === 0) {
+            mediaTableBody.innerHTML = `<tr><td colspan="7" class="empty">No media assets found. Upload your first photo or video above.</td></tr>`;
+            return;
+        }
+
+        assets.forEach(asset => {
+            const date = new Date(asset.created_at).toLocaleDateString("en-KE", {
+                year: "numeric", month: "short", day: "numeric"
+            });
+
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td><strong>${escapeHtml(asset.title)}</strong></td>
+                <td>${escapeHtml(asset.category)}</td>
+                <td><span class="status confirmed">${escapeHtml(asset.type)}</span></td>
+                <td>KES ${parseFloat(asset.price).toLocaleString()}</td>
+                <td><span class="status ${asset.is_locked ? 'pending' : 'completed'}">${asset.is_locked ? 'Locked' : 'Unlocked (Free)'}</span></td>
+                <td>${date}</td>
+                <td>
+                    <a href="${API_URL}/media/download/${asset.id}?token=preview" target="_blank" style="color: #64c5ff; text-decoration: none; font-size: 12px; margin-right: 10px;" title="View Original"><i class="fas fa-eye"></i> View</a>
+                </td>
+            `;
+            mediaTableBody.appendChild(row);
+        });
+    } catch (err) {
+        console.error("Error loading admin media:", err);
+        document.getElementById("media-table-body").innerHTML = `<tr><td colspan="7" class="empty" style="color: #ff7777;">Failed to load media assets.</td></tr>`;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const uploadForm = document.getElementById("media-upload-form");
+    if (uploadForm) {
+        uploadForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            if (!ADMIN_TOKEN) {
+                alert("Please authenticate as admin first.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("title", document.getElementById("upload-title").value);
+            formData.append("category", document.getElementById("upload-category").value);
+            formData.append("type", document.getElementById("upload-type").value);
+            formData.append("price", document.getElementById("upload-price").value);
+            formData.append("is_locked", document.getElementById("upload-is-locked").checked);
+            formData.append("file", document.getElementById("upload-file").files[0]);
+
+            const submitBtn = uploadForm.querySelector("button[type='submit']");
+            submitBtn.textContent = "Uploading...";
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch(`${API_URL}/media`, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${ADMIN_TOKEN}`
+                    },
+                    body: formData
+                });
+
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.error || "Upload failed");
+
+                alert("Media uploaded successfully!");
+                uploadForm.reset();
+                loadAdminMedia();
+            } catch (err) {
+                console.error("Upload error:", err);
+                alert("Failed to upload media: " + err.message);
+            } finally {
+                submitBtn.textContent = "Upload Asset";
+                submitBtn.disabled = false;
+            }
+        });
+    }
+});

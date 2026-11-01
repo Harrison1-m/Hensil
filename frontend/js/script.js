@@ -319,3 +319,263 @@ function escapeHtml(str) {
     if (!str) return '';
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
+
+// =========================================
+// PAID SECURE MEDIA GALLERY & M-PESA LOGIC
+// =========================================
+
+let mediaCursor = null;
+let currentCategory = 'all';
+let isLoadingMedia = false;
+let hasMoreMedia = true;
+let activeCheckoutId = null;
+let selectedMediaForPayment = null;
+
+const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? 'http://localhost:5000/api'
+    : 'https://178.162.254.195/api';
+
+document.addEventListener('DOMContentLoaded', () => {
+    const mediaGrid = document.getElementById('media-grid');
+    if (mediaGrid) {
+        loadMediaBatch();
+
+        // Infinite Scroll via IntersectionObserver
+        const sentinel = document.getElementById('scroll-sentinel');
+        if (sentinel) {
+            const observer = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting && !isLoadingMedia && hasMoreMedia) {
+                    loadMediaBatch();
+                }
+            }, { threshold: 0.1 });
+            observer.observe(sentinel);
+        }
+    }
+});
+
+async function loadMediaBatch() {
+    if (isLoadingMedia || !hasMoreMedia) return;
+    isLoadingMedia = true;
+
+    const mediaGrid = document.getElementById('media-grid');
+    const sentinel = document.getElementById('scroll-sentinel');
+
+    try {
+        let url = `${API_BASE_URL}/media?limit=12`;
+        if (mediaCursor) url += `&cursor=${encodeURIComponent(mediaCursor)}`;
+        if (currentCategory && currentCategory !== 'all') url += `&category=${encodeURIComponent(currentCategory)}`;
+
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (mediaGrid.querySelector('.loading')) {
+            mediaGrid.innerHTML = '';
+        }
+
+        const assets = data.data || [];
+        mediaCursor = data.nextCursor;
+        hasMoreMedia = data.hasMore;
+
+        if (assets.length === 0 && mediaGrid.children.length === 0) {
+            mediaGrid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #777;">No media assets found in this category.</div>`;
+            isLoadingMedia = false;
+            return;
+        }
+
+        assets.forEach(asset => {
+            const card = document.createElement('div');
+            card.className = `gallery-item ${asset.category}`;
+            card.style.cssText = 'background: #1b1b1b; border: 1px solid #333; border-radius: 10px; overflow: hidden; position: relative; display: flex; flex-direction: column;';
+
+            let mediaPreviewHtml = '';
+            if (asset.type === 'video') {
+                mediaPreviewHtml = `
+                    <div style="position: relative; width: 100%; height: 260px; background: #000; overflow: hidden;">
+                        <video src="${API_BASE_URL}/media/download/${asset.id}?token=preview" autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;"></video>
+                        <div style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); padding: 4px 8px; border-radius: 4px; font-size: 11px; color: #c9a227;"><i class="fas fa-video"></i> Teaser</div>
+                    </div>
+                `;
+            } else {
+                // Image with Drag-to-Peek Watermark
+                mediaPreviewHtml = `
+                    <div class="watermark-container" style="position: relative; width: 100%; height: 260px; background: #000; overflow: hidden; user-select: none;">
+                        <img loading="lazy" decoding="async" src="${API_BASE_URL}/media/download/${asset.id}?token=preview" alt="${escapeHtml(asset.title)}" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
+                        ${asset.is_locked ? `
+                            <div class="draggable-logo" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70px; height: 70px; background: rgba(201, 162, 39, 0.85); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: grab; box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: transform 0.3s ease; z-index: 10;" title="Drag to peek under logo">
+                                <img src="frontend/assets/favicon.png" alt="Hensil Logo" style="width: 40px; height: 40px; pointer-events: none;">
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+
+            card.innerHTML = `
+                ${mediaPreviewHtml}
+                <div style="padding: 15px; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+                    <div>
+                        <div style="font-size: 11px; color: #c9a227; text-transform: uppercase; margin-bottom: 4px;">${escapeHtml(asset.category)}</div>
+                        <h4 style="font-size: 16px; margin-bottom: 8px; color: #fff;">${escapeHtml(asset.title)}</h4>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; border-top: 1px solid #2d2d2d; padding-top: 12px;">
+                        <span style="font-weight: 700; color: ${asset.is_locked ? '#52d98b' : '#64c5ff'};">${asset.is_locked ? 'KES ' + parseFloat(asset.price).toLocaleString() : 'Free Download'}</span>
+                        ${asset.is_locked ? `
+                            <button onclick='openMpesaModal(${JSON.stringify(asset)})' style="background: #c9a227; color: #111; padding: 7px 14px; border-radius: 5px; font-weight: 600; font-size: 13px; cursor: pointer; border: none;"><i class="fas fa-lock-open"></i> Unlock</button>
+                        ` : `
+                            <a href="${API_BASE_URL}/media/download/${asset.id}" target="_blank" style="background: #246b45; color: #fff; padding: 7px 14px; border-radius: 5px; font-weight: 600; font-size: 13px; text-decoration: none;"><i class="fas fa-download"></i> Download</a>
+                        `}
+                    </div>
+                </div>
+            `;
+
+            mediaGrid.appendChild(card);
+            initDragToPeek(card.querySelector('.draggable-logo'));
+        });
+
+        if (!hasMoreMedia && sentinel) {
+            sentinel.innerHTML = `<span style="color: #666; font-size: 13px;">— End of Archive —</span>`;
+        }
+    } catch (err) {
+        console.error('Error loading media batch:', err);
+    } finally {
+        isLoadingMedia = false;
+    }
+}
+
+function filterCategory(category) {
+    currentCategory = category;
+    mediaCursor = null;
+    hasMoreMedia = true;
+    const mediaGrid = document.getElementById('media-grid');
+    mediaGrid.innerHTML = `<div class="loading" style="grid-column: 1 / -1; text-align: center; padding: 40px;">Loading category...</div>`;
+    loadMediaBatch();
+}
+
+// Drag-to-Peek Logo Watermark Mechanics
+function initDragToPeek(logo) {
+    if (!logo) return;
+    let isDragging = false;
+    let startX, startY;
+
+    logo.addEventListener('mousedown', dragStart);
+    logo.addEventListener('touchstart', dragStart, { passive: true });
+
+    function dragStart(e) {
+        isDragging = true;
+        logo.style.transition = 'none';
+        logo.style.cursor = 'grabbing';
+        const clientX = e.clientX || e.touches[0].clientX;
+        const clientY = e.clientY || e.touches[0].clientY;
+        startX = clientX - logo.offsetLeft;
+        startY = clientY - logo.offsetTop;
+
+        document.addEventListener('mousemove', dragging);
+        document.addEventListener('touchmove', dragging, { passive: true });
+        document.addEventListener('mouseup', dragEnd);
+        document.addEventListener('touchend', dragEnd);
+    }
+
+    function dragging(e) {
+        if (!isDragging) return;
+        const clientX = e.clientX || e.touches[0].clientX;
+        const clientY = e.clientY || e.touches[0].clientY;
+        const x = clientX - startX;
+        const y = clientY - startY;
+        logo.style.transform = `translate(${x - logo.parentElement.offsetWidth / 2 + 35}px, ${y - logo.parentElement.offsetHeight / 2 + 35}px)`;
+    }
+
+    function dragEnd() {
+        if (!isDragging) return;
+        isDragging = false;
+        logo.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        logo.style.transform = 'translate(-50%, -50%)';
+        logo.style.cursor = 'grab';
+
+        document.removeEventListener('mousemove', dragging);
+        document.removeEventListener('touchmove', dragging);
+        document.removeEventListener('mouseup', dragEnd);
+        document.removeEventListener('touchend', dragEnd);
+    }
+}
+
+// M-Pesa Modal & Payment Flow
+function openMpesaModal(asset) {
+    selectedMediaForPayment = asset;
+    document.getElementById('modal-item-title').textContent = asset.title;
+    document.getElementById('modal-price-display').textContent = `KES ${parseFloat(asset.price).toLocaleString()}`;
+    document.getElementById('mpesa-form').style.display = 'block';
+    document.getElementById('mpesa-status-area').style.display = 'none';
+    document.getElementById('mpesa-modal').style.display = 'flex';
+}
+
+function closeMpesaModal() {
+    document.getElementById('mpesa-modal').style.display = 'none';
+    if (activeCheckoutId) {
+        clearInterval(activeCheckoutId);
+        activeCheckoutId = null;
+    }
+}
+
+async function initiateMpesaPayment(e) {
+    e.preventDefault();
+    const phone = document.getElementById('mpesa-phone').value.trim();
+    if (!phone || !selectedMediaForPayment) return;
+
+    const submitBtn = document.getElementById('mpesa-submit-btn');
+    submitBtn.textContent = 'Initiating STK Push...';
+    submitBtn.disabled = true;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/payment/stk-push`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mediaId: selectedMediaForPayment.id, phone })
+        });
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Failed to initiate M-Pesa payment');
+
+        const checkoutId = data.checkoutRequestId;
+        document.getElementById('mpesa-form').style.display = 'none';
+        document.getElementById('mpesa-status-area').style.display = 'block';
+
+        // Poll payment status every 2 seconds
+        activeCheckoutId = setInterval(async () => {
+            try {
+                const statusRes = await fetch(`${API_BASE_URL}/payment/status/${checkoutId}`);
+                const statusData = await statusRes.json();
+
+                if (statusData.status === 'completed') {
+                    clearInterval(activeCheckoutId);
+                    activeCheckoutId = null;
+
+                    // Save token to IndexedDB / localStorage for device licensing
+                    localStorage.setItem(`hensil_license_${selectedMediaForPayment.id}`, statusData.token);
+
+                    document.getElementById('mpesa-status-text').innerHTML = `<span style="color: #52d98b; font-weight: 700;">Payment Confirmed! Unlocking asset...</span>`;
+                    
+                    setTimeout(() => {
+                        closeMpesaModal();
+                        window.open(`${API_BASE_URL}/media/download/${selectedMediaForPayment.id}?token=${encodeURIComponent(statusData.token)}`, '_blank');
+                        location.reload();
+                    }, 1500);
+                } else if (statusData.status === 'failed') {
+                    clearInterval(activeCheckoutId);
+                    activeCheckoutId = null;
+                    document.getElementById('mpesa-status-text').innerHTML = `<span style="color: #ff7777;">Payment failed or cancelled. Please try again.</span>`;
+                    submitBtn.textContent = 'Pay with M-Pesa STK Push';
+                    submitBtn.disabled = false;
+                    document.getElementById('mpesa-form').style.display = 'block';
+                }
+            } catch (pollErr) {
+                console.error('Polling error:', pollErr);
+            }
+        }, 2000);
+
+    } catch (err) {
+        console.error('M-Pesa payment error:', err);
+        alert('Payment error: ' + err.message);
+        submitBtn.textContent = 'Pay with M-Pesa STK Push';
+        submitBtn.disabled = false;
+    }
+}
+

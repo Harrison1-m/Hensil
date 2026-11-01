@@ -440,14 +440,21 @@
         Hensil <span>Edits</span>
     </div>
 
-    <div class="admin-label">
-        <i class="fas fa-shield-halved"></i>
-        Admin
+    <div style="display: flex; gap: 20px; align-items: center;">
+        <nav style="display: flex; gap: 15px;">
+            <button id="nav-bookings" onclick="switchAdminTab('bookings')" style="background: #c9a227; color: #111;">Bookings</button>
+            <button id="nav-media" onclick="switchAdminTab('media')" style="background: #333; color: #aaa;">Media Library</button>
+        </nav>
+        <div class="admin-label">
+            <i class="fas fa-shield-halved"></i>
+            Admin
+        </div>
     </div>
 </header>
 
 <main>
 
+    <div id="section-bookings">
     <h1>Bookings</h1>
 
     <section class="stats">
@@ -506,8 +513,100 @@
         </div>
 
     </section>
+    </div>
+
+    <div id="section-media" style="display: none;">
+        <h1>Media Library & Uploads</h1>
+        
+        <div style="background: #1b1b1b; border: 1px solid #333; border-radius: 10px; padding: 25px; margin-bottom: 30px;">
+            <h3 style="margin-bottom: 15px; color: #c9a227;"><i class="fas fa-upload"></i> Upload New Media Asset</h3>
+            <form id="media-upload-form" style="display: grid; gap: 15px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); align-items: flex-end;">
+                <div>
+                    <label style="display: block; font-size: 12px; color: #aaa; margin-bottom: 5px;">Title</label>
+                    <input type="text" id="upload-title" name="title" required placeholder="e.g. Nairobi Street Portrait" style="width: 100%; padding: 10px; background: #111; border: 1px solid #444; color: #fff; border-radius: 5px;">
+                </div>
+                <div>
+                    <label style="display: block; font-size: 12px; color: #aaa; margin-bottom: 5px;">Category</label>
+                    <select id="upload-category" name="category" style="width: 100%; padding: 10px;">
+                        <option value="street">Street</option>
+                        <option value="events">Events</option>
+                        <option value="shows">Shows</option>
+                        <option value="weddings">Weddings</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display: block; font-size: 12px; color: #aaa; margin-bottom: 5px;">Type</label>
+                    <select id="upload-type" name="type" style="width: 100%; padding: 10px;">
+                        <option value="image">Image</option>
+                        <option value="video">Video</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display: block; font-size: 12px; color: #aaa; margin-bottom: 5px;">Price (KES)</label>
+                    <input type="number" id="upload-price" name="price" value="500" min="0" style="width: 100%; padding: 10px; background: #111; border: 1px solid #444; color: #fff; border-radius: 5px;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; padding-bottom: 5px;">
+                    <input type="checkbox" id="upload-is-locked" name="is_locked" checked style="width: 18px; height: 18px;">
+                    <label for="upload-is-locked" style="font-size: 13px; cursor: pointer;">Lock Media (Require Payment)</label>
+                </div>
+                <div>
+                    <label style="display: block; font-size: 12px; color: #aaa; margin-bottom: 5px;">File (Photo/Video)</label>
+                    <input type="file" id="upload-file" name="file" required accept="image/*,video/*" style="width: 100%; color: #aaa;">
+                </div>
+                <div>
+                    <button type="submit" style="width: 100%; padding: 11px; font-weight: 700;">Upload Asset</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="table-container">
+            <h3 style="padding: 20px; border-bottom: 1px solid #2d2d2d; font-size: 16px;">Uploaded Assets (Latest First)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Type</th>
+                        <th>Price (KES)</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="media-table-body">
+                    <tr><td colspan="7" class="loading">Loading media assets...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 </main>
+
+<script>
+function switchAdminTab(tab) {
+    const btnBookings = document.getElementById('nav-bookings');
+    const btnMedia = document.getElementById('nav-media');
+    const secBookings = document.getElementById('section-bookings');
+    const secMedia = document.getElementById('section-media');
+
+    if (tab === 'bookings') {
+        btnBookings.style.background = '#c9a227';
+        btnBookings.style.color = '#111';
+        btnMedia.style.background = '#333';
+        btnMedia.style.color = '#aaa';
+        secBookings.style.display = 'block';
+        secMedia.style.display = 'none';
+    } else {
+        btnMedia.style.background = '#c9a227';
+        btnMedia.style.color = '#111';
+        btnBookings.style.background = '#333';
+        btnBookings.style.color = '#aaa';
+        secMedia.style.display = 'block';
+        secBookings.style.display = 'none';
+        loadAdminMedia();
+    }
+}
+</script>
 
 <script src="frontend/js/admin.js"></script>
 

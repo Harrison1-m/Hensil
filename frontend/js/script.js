@@ -445,9 +445,26 @@ function filterCategory(category) {
     currentCategory = category;
     mediaCursor = null;
     hasMoreMedia = true;
+
+    // Update active state on filter buttons
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(btn => {
+        if (btn.getAttribute('data-filter') === category) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+
     const mediaGrid = document.getElementById('media-grid');
-    mediaGrid.innerHTML = `<div class="loading" style="grid-column: 1 / -1; text-align: center; padding: 40px;">Loading category...</div>`;
+    if (mediaGrid) {
+        mediaGrid.innerHTML = `<div class="loading" style="grid-column: 1 / -1; text-align: center; padding: 40px;">Loading category...</div>`;
+    }
     loadMediaBatch();
+}
+
+function filterGallery(category) {
+    filterCategory(category);
 }
 
 // Drag-to-Peek Logo Watermark Mechanics
